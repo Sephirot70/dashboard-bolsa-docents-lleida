@@ -1,0 +1,76 @@
+name: Bug Report
+description: Reportar un error en la aplicación
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar un bug. Por favor, proporciona la siguiente información para ayudarnos a resolverlo.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del problema
+      description: Describe claramente qué está pasando
+      placeholder: Explica el problema que estás experimentando...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Enumera los pasos para reproducir el error
+      placeholder: |
+        1. Ir a '...'
+        2. Hacer clic en '....'
+        3. Desplazarse hacia abajo hasta '....'
+        4. Ver error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      description: Describe qué esperabas que pasara
+      placeholder: Explica qué debería pasar...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Dispositivo
+      description: ¿En qué dispositivo ocurre el problema?
+      options:
+        - Escritorio (Windows)
+        - Escritorio (Mac)
+        - Escritorio (Linux)
+        - Móvil (Android)
+        - Móvil (iOS)
+        - Tablet
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Navegador
+      description: ¿Qué navegador estás usando?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Información adicional
+      description: Cualquier otra información relevante
+      placeholder: Screenshots, logs, etc...

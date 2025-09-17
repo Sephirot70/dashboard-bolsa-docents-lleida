@@ -1,0 +1,58 @@
+name: Feature Request
+description: Sugerir una nueva funcionalidad
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por sugerir una nueva funcionalidad! Ayúdanos a entender qué necesitas.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Qué problema resolvería esta funcionalidad?
+      description: Describe el problema o necesidad
+      placeholder: Como usuario, me gustaría... porque...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solución propuesta
+      description: Describe la funcionalidad que te gustaría ver
+      placeholder: Me gustaría que la aplicación...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: ¿Has considerado otras soluciones?
+      placeholder: También pensé en...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad
+      description: ¿Qué tan importante es esta funcionalidad?
+      options:
+        - Baja
+        - Media
+        - Alta
+        - Crítica
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirmación
+      description: Por favor confirma lo siguiente
+      options:
+        - label: He buscado en issues existentes y esta funcionalidad no ha sido solicitada antes
+          required: true
+        - label: Esta funcionalidad está relacionada con el sistema de nombramientos docentes
+          required: true

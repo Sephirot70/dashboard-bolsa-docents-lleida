@@ -2,6 +2,11 @@
 
 Sistema de gestión de nombramientos para docentes desarrollado por **@CarlesMiranda**.
 
+## 🌐 Enlaces del Proyecto
+
+- **GitHub**: [https://github.com/Sephirot70/dashboard-bolsa-docents-lleida](https://github.com/Sephirot70/dashboard-bolsa-docents-lleida)
+- **Demo en vivo**: `https://tu-proyecto.web.app/` (después del despliegue)
+
 ## 🚀 Despliegue en Firebase
 
 ### Prerrequisitos
@@ -74,10 +79,27 @@ Sistema de gestión de nombramientos para docentes desarrollado por **@CarlesMir
    firebase deploy --only firestore:rules
    ```
 
+## 📂 Subir a GitHub
+
+### Crear el repositorio en GitHub:
+
+1. **Ir a GitHub**: https://github.com/Sephirot70
+2. **Crear nuevo repositorio**:
+   - Nombre: `dashboard-bolsa-docents-lleida`
+   - Descripción: `Sistema de gestión de nombramientos para docentes - Bolsa Docents Lleida`
+   - Público ✅
+   - **NO** inicializar con README, .gitignore o license (ya los tenemos)
+
+3. **Subir el código**:
+   ```bash
+   ./upload-to-github.sh
+   ```
+
 ### URLs del Proyecto
 
 Después del despliegue exitoso, tu aplicación estará disponible en:
-- **Hosting**: `https://tu-project-id.web.app/`
+- **GitHub Repository**: `https://github.com/Sephirot70/dashboard-bolsa-docents-lleida`
+- **Firebase Hosting**: `https://tu-project-id.web.app/`
 - **Consola Firebase**: `https://console.firebase.google.com/project/tu-project-id`
 
 ## 📁 Estructura del Proyecto
