@@ -6,14 +6,15 @@
  * Fecha: Septiembre 2025
  */
 
-// Configuración de Firebase (reemplaza con tus datos del proyecto)
+// Configuración de Firebase (datos reales del proyecto nomenaments-lleida)
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_PROJECT_ID.firebaseapp.com",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_PROJECT_ID.appspot.com",
-  messagingSenderId: "TU_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyD4Gcd20NGKzRMUTd1ce753TmO_XmuaRkA",
+  authDomain: "nomenaments-lleida.firebaseapp.com",
+  projectId: "nomenaments-lleida",
+  storageBucket: "nomenaments-lleida.firebasestorage.app",
+  messagingSenderId: "405634816282",
+  appId: "1:405634816282:web:08ba7054b1d2096945f4a3",
+  measurementId: "G-FZF50YR0D3"
 };
 
 // Inicializar Firebase
@@ -27,20 +28,49 @@ const auth = getAuth(app);
 
 // Variable global para el ID del usuario
 let currentUserId = null;
+let authInitialized = false;
+let dataLoaded = false;
 
 // Autenticación anónima automática
 function initAuth() {
+  if (authInitialized) {
+    console.log('🔄 Firebase ya inicializado, saltando...');
+    return;
+  }
+  
+  authInitialized = true;
+  console.log('🚀 Iniciando autenticación Firebase...');
+  
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUserId = user.uid;
-      console.log('Usuario autenticado:', currentUserId);
-      loadDataFromFirestore();
+      console.log('✅ Usuario autenticado en Firebase:', currentUserId);
+      
+      // IMPORTANTE: Solo cargar datos si el usuario está autenticado localmente también
+      const localAuthToken = sessionStorage.getItem('bolsaDocentsAuth');
+      
+      if (localAuthToken && !dataLoaded) {
+        dataLoaded = true; // Evitar cargas múltiples
+        console.log('📊 Cargando datos una sola vez...');
+        setTimeout(() => {
+          loadDataFromFirestore();
+        }, 500);
+      } else if (!localAuthToken) {
+        console.log('❌ Usuario sin sesión local, NO cargando datos');
+      }
     } else {
-      // Si no hay usuario, crear uno anónimo
-      signInAnonymously(auth).catch((error) => {
-        console.error('Error en autenticación anónima:', error);
-        showMessage('Error', 'Error de conexión con la base de datos', 'error');
-      });
+      console.log('🔐 Iniciando autenticación anónima...');
+      signInAnonymously(auth)
+        .then((userCredential) => {
+          console.log('✅ Autenticación anónima exitosa:', userCredential.user.uid);
+        })
+        .catch((error) => {
+          console.error('❌ Error en autenticación anónima:', error);
+          if (typeof showMessage === 'function') {
+            showMessage('Error', 'Error de conexión con la base de datos', 'error');
+          }
+          loadDataFromLocalStorage();
+        });
     }
   });
 }
@@ -69,30 +99,80 @@ async function saveDataToFirestore() {
 }
 
 async function loadDataFromFirestore() {
-  if (!currentUserId) return;
+  if (!currentUserId) {
+    console.log('No hay usuario autenticado, cargando desde localStorage');
+    loadDataFromLocalStorage();
+    return;
+  }
   
   try {
+    console.log('Cargando datos para usuario:', currentUserId);
     const userDocRef = doc(db, 'users', currentUserId);
     const docSnap = await getDoc(userDocRef);
     
     if (docSnap.exists()) {
       const data = docSnap.data();
+      console.log('Documento encontrado en Firestore');
       
-      // Cargar datos existentes
-      if (data.userInfo) appData.userInfo = data.userInfo;
-      if (data.especialidadData) appData.especialidadData = data.especialidadData;
-      if (data.projections) appData.projections = data.projections;
-      if (data.allAppointments) appData.allAppointments = data.allAppointments;
-      
-      console.log('Datos cargados desde Firestore');
-      renderAll();
+      // Verificar que appData existe antes de cargar
+      if (typeof appData !== 'undefined') {
+        // Cargar datos existentes
+        if (data.userInfo) appData.userInfo = data.userInfo;
+        if (data.especialidadData) appData.especialidadData = data.especialidadData;
+        if (data.projections) appData.projections = data.projections;
+        if (data.allAppointments) appData.allAppointments = data.allAppointments;
+        
+        console.log('Datos cargados desde Firestore');
+        
+        // Solo renderizar si la función existe
+        if (typeof renderAll === 'function') {
+          renderAll();
+        }
+      } else {
+        console.log('appData no está disponible aún, reintentando en 1 segundo...');
+        setTimeout(() => loadDataFromFirestore(), 1000);
+      }
     } else {
-      // Si no existen datos, crear documento inicial
-      await saveDataToFirestore();
-      console.log('Documento inicial creado en Firestore');
+      console.log('No existe documento, usando datos por defecto locales...');
+      // En lugar de crear un documento vacío, usar los datos por defecto de appData
+      console.log('📁 Usando datos por defecto de la aplicación');
+      
+      // Solo renderizar si appData ya tiene la estructura correcta
+      if (typeof appData !== 'undefined' && appData.userInfo && typeof appData.userInfo.numero_orden === 'number') {
+        if (typeof renderAll === 'function') {
+          renderAll();
+        }
+      } else {
+        console.log('⚠️ appData no tiene la estructura correcta, inicializando...');
+        // Asegurar que appData tenga la estructura mínima necesaria
+        if (typeof appData !== 'undefined' && appData.userInfo) {
+          if (typeof appData.userInfo.numero_orden === 'undefined') {
+            appData.userInfo.numero_orden = 101322; // Valor por defecto
+          }
+          if (!appData.userInfo.especialidades) {
+            appData.userInfo.especialidades = [];
+          }
+        }
+        
+        if (typeof renderAll === 'function') {
+          renderAll();
+        }
+      }
     }
   } catch (error) {
     console.error('Error cargando desde Firestore:', error);
+    console.log('Código de error:', error.code);
+    console.log('Mensaje de error:', error.message);
+    
+    // Mostrar error específico
+    if (typeof showMessage === 'function') {
+      if (error.code === 'permission-denied') {
+        showMessage('Error', 'Error de permisos. Verificando autenticación...', 'error');
+      } else {
+        showMessage('Error', 'Error de conexión con la base de datos', 'error');
+      }
+    }
+    
     // Fallback a localStorage si hay error con Firestore
     loadDataFromLocalStorage();
   }
@@ -161,3 +241,6 @@ window.saveData = saveData;
 window.loadData = loadData;
 window.initAuth = initAuth;
 window.migrateLocalStorageToFirestore = migrateLocalStorageToFirestore;
+
+// Firebase Auth se inicializa automáticamente desde app.js
+// No necesitamos DOMContentLoaded aquí para evitar inicializaciones duplicadas

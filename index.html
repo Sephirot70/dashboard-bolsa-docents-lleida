@@ -12,11 +12,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="@CarlesMiranda">
     <meta name="description" content="Sistema de gestión de nombramientos para docentes - Bolsa Docents Lleida">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Bolsa Docents">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Bolsa Docents">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#218d8d">
+    
+    <!-- Favicon y iconos para diferentes dispositivos -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
     <title>Dashboard Bolsa Docents - Lleida | @CarlesMiranda</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20250921-enhanced-analytics-sections">
     
     <!-- Firebase SDK -->
-    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="firebase-config.js?v=20250919-3"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('✅ SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('❌ SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
 </head>
 <body>
     <!-- Login Screen -->
@@ -94,6 +123,11 @@
         </header>
 
         <main class="container">
+            <!-- Floating Search Button -->
+            <button type="button" class="floating-search-btn" id="openSearchModalBtn" title="Buscar histórico por número de orden">
+                <span class="search-icon">🔍</span>
+            </button>
+
             <!-- Floating Add Button -->
             <button type="button" class="floating-add-btn" id="openFormModalBtn" title="Añadir nuevo nombramiento">
                 <span class="plus-icon">+</span>
@@ -157,33 +191,76 @@
 
             <!-- Section 3: Rhythm Analysis -->
             <section class="dashboard-section">
-                <h2>Análisis de Ritmo</h2>
-                <div class="rhythm-cards">
-                    <div class="card rhythm-card">
-                        <div class="card__body">
-                            <h3>Ritmo Normal</h3>
-                            <div class="rhythm-data" id="normalRhythm">
-                                <div class="rhythm-item">
-                                    <span class="specialty">TEC</span>
-                                    <span class="progression">Progresión constante</span>
+                <div class="section-header">
+                    <h2>📊 Análisis de Ritmo</h2>
+                    <p class="section-subtitle">Monitoreo en tiempo real de patrones de nombramientos</p>
+                </div>
+                <div class="rhythm-analytics-grid">
+                    <div class="analytics-card rhythm-normal">
+                        <div class="analytics-card-header">
+                            <div class="analytics-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 3V21H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9 9L12 6L16 10L20 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="analytics-status">
+                                <span class="status-indicator normal"></span>
+                                <span class="status-text">Ritmo Normal</span>
+                            </div>
+                        </div>
+                        <div class="analytics-content">
+                            <div class="specialty-analysis">
+                                <div class="specialty-tag">TEC</div>
+                                <h4>Progresión Constante</h4>
+                                <p class="analysis-description">Incremento estable y predecible</p>
+                            </div>
+                            <div class="metrics-row">
+                                <div class="metric">
+                                    <span class="metric-value">~12,579</span>
+                                    <span class="metric-label">Promedio semanal</span>
                                 </div>
-                                <div class="rhythm-detail">
-                                    <small>Incremento promedio semanal: ~12,579</small>
+                                <div class="metric">
+                                    <span class="metric-value">+5.2%</span>
+                                    <span class="metric-label">Crecimiento</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card rhythm-card">
-                        <div class="card__body">
-                            <h3>Saltos Significativos</h3>
-                            <div class="rhythm-data" id="significantJumps">
-                                <div class="rhythm-item warning">
-                                    <span class="specialty">TEC</span>
-                                    <span class="jump">+42,963 (28/08 → 08/09)</span>
+
+                    <div class="analytics-card rhythm-anomaly">
+                        <div class="analytics-card-header">
+                            <div class="analytics-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="analytics-status">
+                                <span class="status-indicator warning"></span>
+                                <span class="status-text">Saltos Significativos</span>
+                            </div>
+                        </div>
+                        <div class="analytics-content">
+                            <div class="anomaly-list">
+                                <div class="anomaly-item">
+                                    <div class="anomaly-header">
+                                        <span class="specialty-tag">TEC</span>
+                                        <span class="anomaly-impact high">+42,963</span>
+                                    </div>
+                                    <div class="anomaly-timeframe">28/08 → 08/09</div>
+                                    <div class="anomaly-bar">
+                                        <div class="anomaly-fill" style="width: 85%"></div>
+                                    </div>
                                 </div>
-                                <div class="rhythm-item warning">
-                                    <span class="specialty">TEC</span>
-                                    <span class="jump">+30,984 (08/09 → 09/09)</span>
+                                <div class="anomaly-item">
+                                    <div class="anomaly-header">
+                                        <span class="specialty-tag">TEC</span>
+                                        <span class="anomaly-impact medium">+30,984</span>
+                                    </div>
+                                    <div class="anomaly-timeframe">08/09 → 09/09</div>
+                                    <div class="anomaly-bar">
+                                        <div class="anomaly-fill" style="width: 62%"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -193,48 +270,173 @@
 
             <!-- Section 4: Time Estimation -->
             <section class="dashboard-section">
-                <h2>Estimación de Tiempo</h2>
-                <div class="estimation-cards">
-                    <div class="card estimation-card success">
-                        <div class="card__body">
-                            <h3>TEC - Tecnología</h3>
-                            <div class="estimation-main">
-                                <div class="time-estimate">
-                                    <span class="time-value">0.5</span>
+                <div class="section-header">
+                    <h2>⏱️ Estimación de Tiempo</h2>
+                    <p class="section-subtitle">Proyecciones inteligentes basadas en datos históricos</p>
+                </div>
+                <div class="estimation-grid">
+                    <div class="estimation-card priority-high">
+                        <div class="estimation-header">
+                            <div class="specialty-info">
+                                <span class="specialty-badge">TEC</span>
+                                <h3>Tecnología</h3>
+                            </div>
+                            <div class="priority-indicator high">
+                                <span class="priority-dot"></span>
+                                <span class="priority-text">Próximo</span>
+                            </div>
+                        </div>
+                        <div class="estimation-body">
+                            <div class="time-display">
+                                <div class="time-main">
+                                    <span class="time-number">0.5</span>
                                     <span class="time-unit">días</span>
                                 </div>
-                                <div class="estimate-detail">
-                                    <small>Restantes: 948 posiciones</small>
+                                <div class="time-confidence">
+                                    <div class="confidence-bar">
+                                        <div class="confidence-fill" style="width: 95%"></div>
+                                    </div>
+                                    <span class="confidence-text">95% confianza</span>
+                                </div>
+                            </div>
+                            <div class="estimation-details">
+                                <div class="detail-item">
+                                    <span class="detail-icon">📍</span>
+                                    <span class="detail-text">948 posiciones restantes</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-icon">📈</span>
+                                    <span class="detail-text">Ritmo acelerado</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card estimation-card warning">
-                        <div class="card__body">
-                            <h3>507 - Informática</h3>
-                            <div class="estimation-main">
-                                <div class="time-estimate">
-                                    <span class="time-value">42.4</span>
+
+                    <div class="estimation-card priority-medium">
+                        <div class="estimation-header">
+                            <div class="specialty-info">
+                                <span class="specialty-badge">507</span>
+                                <h3>Informática</h3>
+                            </div>
+                            <div class="priority-indicator medium">
+                                <span class="priority-dot"></span>
+                                <span class="priority-text">Medio plazo</span>
+                            </div>
+                        </div>
+                        <div class="estimation-body">
+                            <div class="time-display">
+                                <div class="time-main">
+                                    <span class="time-number">42.4</span>
                                     <span class="time-unit">días</span>
                                 </div>
-                                <div class="estimate-detail">
-                                    <small>Restantes: 76,262 posiciones</small>
+                                <div class="time-confidence">
+                                    <div class="confidence-bar">
+                                        <div class="confidence-fill" style="width: 78%"></div>
+                                    </div>
+                                    <span class="confidence-text">78% confianza</span>
+                                </div>
+                            </div>
+                            <div class="estimation-details">
+                                <div class="detail-item">
+                                    <span class="detail-icon">📍</span>
+                                    <span class="detail-text">76,262 posiciones restantes</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-icon">📊</span>
+                                    <span class="detail-text">Ritmo moderado</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card estimation-card info">
-                        <div class="card__body">
-                            <h3>623 - Producción Arts Gràfiques</h3>
-                            <div class="estimation-main">
-                                <div class="time-estimate">
-                                    <span class="time-value">N/D</span>
+
+                    <div class="estimation-card priority-low">
+                        <div class="estimation-header">
+                            <div class="specialty-info">
+                                <span class="specialty-badge">623</span>
+                                <h3>Producción Arts Gràfiques</h3>
+                            </div>
+                            <div class="priority-indicator low">
+                                <span class="priority-dot"></span>
+                                <span class="priority-text">Sin datos</span>
+                            </div>
+                        </div>
+                        <div class="estimation-body">
+                            <div class="time-display">
+                                <div class="time-main insufficient-data">
+                                    <span class="time-number">N/D</span>
                                     <span class="time-unit">datos insuf.</span>
                                 </div>
-                                <div class="estimate-detail">
-                                    <small>Restantes: 68,167 posiciones</small>
+                                <div class="data-status">
+                                    <div class="status-icon">⚠️</div>
+                                    <span class="status-text">Necesita más datos históricos</span>
                                 </div>
                             </div>
+                            <div class="estimation-details">
+                                <div class="detail-item">
+                                    <span class="detail-icon">📍</span>
+                                    <span class="detail-text">68,167 posiciones restantes</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-icon">📋</span>
+                                    <span class="detail-text">Recopilar datos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Charts Analysis -->
+            <section class="dashboard-section">
+                <h2>Análisis Gráfico de Fluctuaciones</h2>
+                <div class="card chart-card">
+                    <div class="card__body">
+                        <div class="chart-controls">
+                            <div class="form-group">
+                                <label for="chartSpecialtySelect" class="form-label">Seleccionar Especialidad</label>
+                                <select id="chartSpecialtySelect" class="form-control">
+                                    <option value="">Selecciona una especialidad...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="chartContainer" class="chart-container hidden">
+                            <div class="chart-header">
+                                <h4 id="chartTitle">Fluctuaciones de Nombramientos</h4>
+                                <div class="chart-stats">
+                                    <div class="chart-stat">
+                                        <span class="chart-stat-label">Total Nombramientos:</span>
+                                        <span class="chart-stat-value" id="totalAppointments">0</span>
+                                    </div>
+                                    <div class="chart-stat">
+                                        <span class="chart-stat-label">Variación Promedio:</span>
+                                        <span class="chart-stat-value" id="averageVariation">0</span>
+                                    </div>
+                                    <div class="chart-stat">
+                                        <span class="chart-stat-label">Mayor Salto:</span>
+                                        <span class="chart-stat-value" id="maxJump">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-content">
+                                <canvas id="appointmentsChart" width="800" height="400"></canvas>
+                            </div>
+                            
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color" style="background-color: var(--color-primary);"></span>
+                                    <span class="legend-text">Número de Orden</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color" style="background-color: var(--color-warning);"></span>
+                                    <span class="legend-text">Saltos Significativos</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="noChartData" class="no-data-text">
+                            Selecciona una especialidad para ver el análisis gráfico de fluctuaciones
                         </div>
                     </div>
                 </div>
@@ -251,10 +453,10 @@
     <!-- End Main Dashboard -->
 
     <!-- Manage Specialties Modal -->
-    <div id="manageSpecialtiesModal" class="modal hidden">
-        <div class="modal-content manage-specialties-modal">
+    <div id="manageSpecialtiesModal" class="modal-overlay hidden">
+        <div class="modal manage-specialties-modal">
             <div class="modal-header">
-                <h3>Gestionar Especialidades</h3>
+                <h3 class="modal-title">Gestionar Especialidades</h3>
                 <button type="button" class="modal-close" id="closeSpecialtiesModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -297,10 +499,10 @@
     </div>
 
     <!-- Add Appointment Modal -->
-    <div id="addAppointmentModal" class="modal hidden">
-        <div class="modal-content form-modal">
+    <div id="addAppointmentModal" class="modal-overlay hidden">
+        <div class="modal form-modal">
             <div class="modal-header">
-                <h3>Añadir Nuevo Nombramiento</h3>
+                <h3 class="modal-title">Añadir Nuevo Nombramiento</h3>
                 <button type="button" class="modal-close" id="closeFormModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -315,17 +517,6 @@
                             <label for="especialidad" class="form-label">Especialidad</label>
                             <select id="especialidad" class="form-control" required>
                                 <option value="">Seleccionar especialidad...</option>
-                                <option value="712">712 - Disseny Gràfic</option>
-                                <option value="715">715 - Fotografia</option>
-                                <option value="507">507 - Informàtica</option>
-                                <option value="721">721 - Mitjans Audiovisuals</option>
-                                <option value="722">722 - Mitjans Informàtics</option>
-                                <option value="519">519 - Processos I Mitjans De Comunicació</option>
-                                <option value="522">522 - Processos I Productes D'Arts Gràfiques</option>
-                                <option value="623">623 - Producció En Arts Gràfiques</option>
-                                <option value="627">627 - Sistemes I Aplicacions Informàtiques</option>
-                                <option value="TEC">TEC - Tecnologia</option>
-                                <option value="629">629 - Tècniques I Procediments D'Imatge I So</option>
                             </select>
                         </div>
                         
@@ -366,17 +557,152 @@
                         <button type="button" class="btn btn--outline" id="clearFormBtn">
                             Limpiar Formulario
                         </button>
+                        <button type="button" class="btn btn--secondary" id="cancelFormBtn">
+                            Cancelar
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Success/Error Messages Modal -->
-    <div id="messageModal" class="modal hidden">
-        <div class="modal-content">
+    <!-- Edit Appointment Modal -->
+    <div id="editAppointmentModal" class="modal-overlay hidden">
+        <div class="modal form-modal">
             <div class="modal-header">
-                <h3 id="modalTitle">Mensaje</h3>
+                <h3 class="modal-title">Editar Nombramiento</h3>
+                <button type="button" class="modal-close" id="closeEditAppointmentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editAppointmentForm" class="appointment-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editFecha" class="form-label">Fecha</label>
+                            <input type="date" id="editFecha" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editEspecialidad" class="form-label">Especialidad</label>
+                            <select id="editEspecialidad" class="form-control" required>
+                                <option value="">Seleccionar especialidad...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editNumero" class="form-label">Nº Orden</label>
+                            <input type="number" id="editNumero" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editCentro" class="form-label">Centro</label>
+                            <input type="text" id="editCentro" class="form-control" required placeholder="Nombre del centro educativo">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editDuracion" class="form-label">Duración</label>
+                            <input type="text" id="editDuracion" class="form-control" required placeholder="Ej: Hasta 31/08/2026">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editJornada" class="form-label">Jornada</label>
+                            <select id="editJornada" class="form-control" required>
+                                <option value="">Seleccionar jornada...</option>
+                                <option value="Sencera">Sencera</option>
+                                <option value="0,50">0,50</option>
+                                <option value="0,25">0,25</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">
+                            Actualizar Nombramiento
+                        </button>
+                        <button type="button" class="btn btn--danger" id="deleteAppointmentBtn">
+                            🗑️ Eliminar
+                        </button>
+                        <button type="button" class="btn btn--secondary" id="cancelEditAppointmentBtn">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search History Modal -->
+    <div id="searchHistoryModal" class="modal-overlay hidden">
+        <div class="modal form-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Buscar Histórico por Número de Orden</h3>
+                <button type="button" class="modal-close" id="closeSearchModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="searchHistoryForm" class="search-form">
+                    <div class="form-group">
+                        <label for="searchOrderNumber" class="form-label">Número de Orden</label>
+                        <input type="number" id="searchOrderNumber" class="form-control" required 
+                               placeholder="Introduce el número de orden a buscar..." min="1">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">
+                            🔍 Buscar Histórico
+                        </button>
+                        <button type="button" class="btn btn--secondary" id="cancelSearchBtn">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Search Results -->
+                <div id="searchResults" class="search-results hidden">
+                    <div class="search-results-header">
+                        <h4 id="searchResultsTitle">Histórico encontrado</h4>
+                        <button type="button" class="btn btn--outline btn--small" id="newSearchBtn">
+                            Nueva Búsqueda
+                        </button>
+                    </div>
+                    
+                    <div class="search-results-content">
+                        <div class="search-summary" id="searchSummary">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                        
+                        <div class="search-table-container">
+                            <table class="search-results-table" id="searchResultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Especialidad</th>
+                                        <th>Nº Orden</th>
+                                        <th>Centro</th>
+                                        <th>Duración</th>
+                                        <th>Jornada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Results will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="noSearchResults" class="no-results-message hidden">
+                            <div class="no-results-icon">🔍</div>
+                            <h4>No se encontraron resultados</h4>
+                            <p>No hay nombramientos registrados para el número de orden especificado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages Modal -->
+    <div id="messageModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Mensaje</h3>
                 <button type="button" class="modal-close" id="closeModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -385,6 +711,2079 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="app.js?v=20250921-search-fix"></script>
+    
+    <!-- Debug script inline para diagnosticar -->
+    <script>
+        console.log('🔍 Script inline ejecutándose... v3');
+        console.log('🔍 DEBUG: DOM readyState:', document.readyState);
+        
+        function debugLogin() {
+            console.log('🔍 DEBUG: Iniciando diagnóstico...');
+            
+            const loginForm = document.getElementById('loginForm');
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            
+            console.log('🔍 DEBUG: loginForm:', !!loginForm);
+            console.log('🔍 DEBUG: submitBtn:', !!submitBtn);
+            
+            if (loginForm && submitBtn) {
+                console.log('🔍 DEBUG: Elementos encontrados, añadiendo listener directo...');
+                
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('🔍 DEBUG: Submit detectado!');
+                    
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    console.log('🔍 DEBUG: Usuario:', username ? 'Presente' : 'Vacío');
+                    console.log('🔍 DEBUG: Password:', password ? 'Presente' : 'Vacío');
+                    
+                    // Validación simple
+                    if ((username.toLowerCase() === 'sefirot70' && password === 'Absa1234')) {
+                        console.log('🔍 DEBUG: Credenciales válidas - redirigiendo...');
+                        
+                        // Crear sesión con debugging
+                        const currentTime = Date.now();
+                        sessionStorage.setItem('bolsaDocentsAuth', 'authenticated');
+                        sessionStorage.setItem('bolsaDocentsAuthTime', currentTime.toString());
+                        
+                        console.log('🔍 DEBUG: Sesión creada:', {
+                            auth: sessionStorage.getItem('bolsaDocentsAuth'),
+                            time: sessionStorage.getItem('bolsaDocentsAuthTime'),
+                            timestamp: currentTime
+                        });
+                        
+                        // Usar la función showDashboard de app.js
+                        if (typeof showDashboard === 'function') {
+                            console.log('🔍 DEBUG: Llamando a showDashboard() de app.js...');
+                            showDashboard();
+                        } else {
+                            console.log('🔍 DEBUG: showDashboard no disponible, mostrando manualmente...');
+                            // Fallback manual si app.js no está cargado
+                            document.getElementById('loginScreen').style.display = 'none';
+                            document.getElementById('mainDashboard').style.display = 'block';
+                            document.getElementById('mainDashboard').classList.remove('hidden');
+                        }
+                        
+                        console.log('🔍 DEBUG: Dashboard mostrado!');
+                        
+                        // Inicializar dashboard con datos - TIMING CORREGIDO
+                        // Usar requestAnimationFrame para asegurar que el DOM se renderice
+                        requestAnimationFrame(() => {
+                            setTimeout(() => {
+                                console.log('🔍 DEBUG: Inicializando dashboard después de render...');
+                                
+                                // Debug del estado del dashboard
+                                const dashboard = document.getElementById('mainDashboard');
+                                console.log('🔍 DEBUG: Estado del dashboard:', {
+                                    exists: !!dashboard,
+                                    display: dashboard ? dashboard.style.display : 'N/A',
+                                    visibility: dashboard ? dashboard.style.visibility : 'N/A',
+                                    classList: dashboard ? [...dashboard.classList] : 'N/A',
+                                    offsetHeight: dashboard ? dashboard.offsetHeight : 'N/A'
+                                });
+                                
+                                initializeDashboard();
+                            }, 200);
+                        });
+                    } else {
+                        console.log('🔍 DEBUG: Credenciales inválidas');
+                        alert('Credenciales incorrectas');
+                    }
+                });
+                
+                console.log('🔍 DEBUG: Listener añadido correctamente');
+            } else {
+                console.log('🔍 DEBUG: Elementos no encontrados, reintentando...');
+                setTimeout(debugLogin, 100);
+            }
+        }
+        
+        // Ejecutar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', debugLogin);
+        } else {
+            debugLogin();
+        }
+        
+        // FALLBACK DE ÚLTIMO RECURSO - Window Load
+        window.addEventListener('load', function() {
+            console.log('🔧 FALLBACK: Window load - verificando sistema');
+            setTimeout(() => {
+                console.log('✅ FALLBACK: Sistema ya configurado correctamente');
+                
+                // VERIFICAR SI EL USUARIO YA ESTÁ AUTENTICADO Y EL DASHBOARD VISIBLE
+                const isAuthenticated = sessionStorage.getItem('bolsaDocentsAuth') === 'authenticated';
+                const dashboard = document.getElementById('mainDashboard');
+                const isDashboardVisible = dashboard && !dashboard.classList.contains('hidden');
+                
+                console.log('🔍 DEBUG: Estado de autenticación:', {
+                    isAuthenticated: isAuthenticated,
+                    isDashboardVisible: isDashboardVisible,
+                    dashboardExists: !!dashboard
+                });
+                
+                // Si está autenticado y el dashboard es visible, pero no se ha inicializado
+                if (isAuthenticated && isDashboardVisible && !window.dashboardInitialized) {
+                    console.log('🔧 FALLBACK: Usuario autenticado pero dashboard no inicializado - ejecutando inicialización...');
+                    
+                    // Verificar si las funciones de búsqueda existen
+                    const searchFunctionsExist = typeof showSearchModal === 'function' && 
+                                               typeof searchAppointmentHistory === 'function';
+                    
+                    if (!searchFunctionsExist) {
+                        console.log('🚨 FALLBACK: Funciones de búsqueda no encontradas - inicializando dashboard...');
+                        initializeDashboard();
+                        window.dashboardInitialized = true;
+                    } else {
+                        console.log('✅ FALLBACK: Funciones de búsqueda ya existen');
+                    }
+                }
+            }, 500);
+        });
+        
+        console.log('🔍 Script inline completado');
+        
+        // Función para inicializar el dashboard
+        function initializeDashboard() {
+            console.log('🔍 DEBUG: Ejecutando initializeDashboard...');
+            
+            // SINCRONIZAR con datos de app.js si están disponibles
+            if (typeof appData !== 'undefined' && appData) {
+                console.log('✅ DEBUG: Sincronizando con datos de app.js...');
+                window.appData = appData;
+                console.log('🔍 DEBUG: Datos sincronizados desde app.js:', {
+                    appointments: window.appData.allAppointments?.length,
+                    specialties: window.appData.userInfo?.especialidades?.length,
+                    especialidadData: Object.keys(window.appData.especialidadData || {}).length
+                });
+            } else {
+                console.log('⚠️ DEBUG: appData de app.js no disponible, usando datos locales...');
+                // Datos de ejemplo (respaldo si app.js no está disponible)
+                window.appData = {
+                    "userInfo": {
+                        "numero_orden": 101322,
+                        "especialidades": [
+                            {"codigo": "712", "nombre": "Disseny Gràfic", "status": "pendent p.c.", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "715", "nombre": "Fotografia", "status": "activa", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "507", "nombre": "Informàtica", "status": "pendent p.c.", "currentNumber": 25060, "remaining": 76262},
+                            {"codigo": "721", "nombre": "Mitjans Audiovisuals", "status": "activa", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "722", "nombre": "Mitjans Informàtics", "status": "pendent p.c.", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "519", "nombre": "Processos I Mitjans De Comunicació", "status": "pendent p.c.", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "522", "nombre": "Processos I Productes D'Arts Gràfiques", "status": "pendent p.c.", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "623", "nombre": "Producció En Arts Gràfiques", "status": "pendent p.c.", "currentNumber": 33155, "remaining": 68167},
+                            {"codigo": "627", "nombre": "Sistemes I Aplicacions Informàtiques", "status": "pendent p.c.", "currentNumber": 0, "remaining": 101322},
+                            {"codigo": "TEC", "nombre": "Tecnologia", "status": "activa", "currentNumber": 100374, "remaining": 948},
+                            {"codigo": "629", "nombre": "Tècniques I Procediments D'Imatge I So", "status": "pendent p.c.", "currentNumber": 0, "remaining": 101322}
+                        ]
+                    },
+                    "especialidadData": {
+                        "TEC": {
+                            "ultimo_numero": 100374,
+                            "fecha": "09/09/2025",
+                            "centro": "IES Lo Pla d'Urgell (Bellpuig)",
+                            "jornada": "0,50",
+                            "fin": "31/08/2026",
+                            "historico": [
+                                {"numero": 10524, "fecha": "21/07/2025"},
+                                {"numero": 26427, "fecha": "28/08/2025"},
+                                {"numero": 69390, "fecha": "08/09/2025"},
+                                {"numero": 100374, "fecha": "09/09/2025"},
+                                {"numero": 28678, "fecha": "15/09/2025"}
+                            ]
+                        },
+                        "507": {
+                            "ultimo_numero": 25060,
+                            "fecha": "15/09/2025",
+                            "centro": "Institut Caparrella (Lleida)",
+                            "jornada": "Sencera",
+                            "fin": "29/09/2025",
+                            "historico": [
+                                {"numero": 14779, "fecha": "08/09/2025"},
+                                {"numero": 25060, "fecha": "15/09/2025"}
+                            ]
+                        },
+                        "623": {
+                            "ultimo_numero": 33155,
+                            "fecha": "09/09/2025",
+                            "centro": "IES Caparrella (Lleida)",
+                            "jornada": "Sencera",
+                            "fin": "18/09/2025",
+                            "historico": [
+                                {"numero": 33155, "fecha": "09/09/2025"}
+                            ]
+                        }
+                    },
+                    "allAppointments": [
+                        {"id": "1", "fecha": "15/09/2025", "especialidad": "507", "numero": 25060, "centro": "Institut Caparrella (Lleida)", "duracion": "Hasta 29/09/2025", "jornada": "Sencera"},
+                        {"id": "2", "fecha": "15/09/2025", "especialidad": "TEC", "numero": 28678, "centro": "Institut Màrius Torres (Lleida)", "duracion": "Hasta 11/12/2025", "jornada": "Sencera"},
+                        {"id": "3", "fecha": "09/09/2025", "especialidad": "623", "numero": 33155, "centro": "IES Caparrella (Lleida)", "duracion": "Hasta 18/09/2025", "jornada": "Sencera"},
+                        {"id": "4", "fecha": "09/09/2025", "especialidad": "TEC", "numero": 100374, "centro": "IES Lo Pla d'Urgell (Bellpuig)", "duracion": "Hasta 31/08/2026", "jornada": "0,50"},
+                        {"id": "5", "fecha": "08/09/2025", "especialidad": "507", "numero": 14779, "centro": "Institut Caparrella (Lleida)", "duracion": "Hasta 31/08/2026", "jornada": "0,50"},
+                        {"id": "6", "fecha": "08/09/2025", "especialidad": "TEC", "numero": 69390, "centro": "IES Lo Pla d'Urgell (Bellpuig)", "duracion": "Hasta 31/08/2026", "jornada": "0,50"},
+                        {"id": "7", "fecha": "28/08/2025", "especialidad": "TEC", "numero": 26427, "centro": "IES Mollerussa", "duracion": "Hasta 31/08/2026", "jornada": "0,50"},
+                        {"id": "8", "fecha": "21/07/2025", "especialidad": "TEC", "numero": 10524, "centro": "IES Lo Pla d'Urgell", "duracion": "Hasta 31/08/2026", "jornada": "0,50"}
+                    ]
+                };
+            }
+            
+            // Renderizar especialidades (flashcards)
+            renderSpecialtyCards(window.appData.userInfo.especialidades);
+            
+            // Inicializar window.currentEspecialidades para acceso global
+            window.currentEspecialidades = window.appData.userInfo.especialidades;
+            console.log('✅ window.currentEspecialidades inicializado con', window.currentEspecialidades.length, 'especialidades');
+            
+            // Renderizar tabla de últimos nombramientos
+            renderAppointmentsTable(window.appData.allAppointments);
+            
+            // Configurar event listeners para botones de editar
+            setupEditAppointmentButtons();
+            
+            // Llenar desplegable de gráficos
+            populateChartSelect(window.appData.userInfo.especialidades);
+            
+            // Configurar eventos de modales - UNIFICADO Y SIMPLIFICADO
+            console.log('🔍 DEBUG: Configurando sistema de modales...');
+            setupModalSystem();
+            
+            // Configurar edición de número de orden
+            setupOrderNumberEdit();
+            
+            // Configurar formulario de especialidades
+            setupSpecialtyForm();
+            
+            // Configurar formulario de búsqueda de histórico - UNIFICADO
+            setupSearchHistoryForm();
+            
+            console.log('🔍 DEBUG: Dashboard inicializado completamente');
+            console.log('🔍 DEBUG: Datos finales disponibles:', {
+                totalAppointments: window.appData?.allAppointments?.length || 0,
+                especialidadDataKeys: window.appData?.especialidadData ? Object.keys(window.appData.especialidadData) : [],
+                sampleAppointment: window.appData?.allAppointments?.[0] || 'N/A'
+            });
+            
+            // Marcar que el dashboard ha sido inicializado
+            window.dashboardInitialized = true;
+            console.log('✅ DEBUG: Dashboard marcado como inicializado');
+            
+            // // CÓDIGO ANTERIOR COMENTADO - CAUSABA CONFLICTOS
+            // setupFloatingButtonDirectly();
+            // setTimeout(() => {
+            //     window.testModal = function() {
+            //         console.log('🧪 EJECUTANDO TEST MANUAL DEL MODAL');
+            //         showModalDirectly();
+            //     };
+            //     window.showModalDirectly = showModalDirectly;
+            //     window.forceShowModal = forceShowModal;
+            //     console.log('🧪 Función window.testModal() creada para test manual');
+            //     console.log('🧪 Función window.forceShowModal() disponible globalmente');
+            // }, 2000);
+        }
+        
+        // SISTEMA UNIFICADO DE MODALES - VERSIÓN SIMPLIFICADA Y FUNCIONAL
+        function setupModalSystem() {
+            console.log('� CONFIGURANDO SISTEMA DE MODALES UNIFICADO...');
+            
+            // Buscar elementos principales
+            const addButton = document.getElementById('openFormModalBtn');
+            const manageButton = document.getElementById('manageSpecialtiesBtn');
+            const searchButton = document.getElementById('openSearchModalBtn');
+            const addModal = document.getElementById('addAppointmentModal');
+            const manageModal = document.getElementById('manageSpecialtiesModal');
+            const searchModal = document.getElementById('searchHistoryModal');
+            
+            console.log('🔍 Elementos encontrados:', {
+                addButton: !!addButton,
+                manageButton: !!manageButton,
+                searchButton: !!searchButton,
+                addModal: !!addModal,
+                manageModal: !!manageModal,
+                searchModal: !!searchModal
+            });
+            
+            // Función para mostrar modal
+            function showModal(modalId) {
+                console.log(`🎯 Mostrando modal: ${modalId}`);
+                const modal = document.getElementById(modalId);
+                if (!modal) {
+                    console.error(`❌ Modal ${modalId} no encontrado`);
+                    return;
+                }
+                
+                // Mostrar modal
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                modal.style.opacity = '1';
+                modal.style.visibility = 'visible';
+                
+                // Poblar datos si es necesario
+                if (modalId === 'addAppointmentModal') {
+                    populateModalSelect(window.appData.userInfo.especialidades);
+                } else if (modalId === 'manageSpecialtiesModal') {
+                    populateSpecialtiesList(window.appData.userInfo.especialidades);
+                } else if (modalId === 'searchHistoryModal') {
+                    resetSearchModal();
+                }
+                
+                console.log(`✅ Modal ${modalId} mostrado`);
+            }
+            
+            // Función para cerrar modal
+            function hideModal(modal) {
+                if (!modal) return;
+                console.log(`🔄 Cerrando modal: ${modal.id}`);
+                
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+                modal.style.opacity = '0';
+                modal.style.visibility = 'hidden';
+                
+                console.log(`✅ Modal ${modal.id} cerrado`);
+            }
+            
+            // Configurar botón "+" para añadir nombramiento
+            if (addButton) {
+                console.log('✅ Configurando botón "+"...');
+                addButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();                console.log('🎯 CLICK EN BOTÓN + DETECTADO');
+                
+                // Usar función de app.js
+                if (typeof showFormModal === 'function') {
+                    showFormModal();
+                } else {
+                    console.error('❌ showFormModal no disponible');
+                }
+                });
+            } else {
+                console.error('❌ Botón flotante no encontrado');
+            }
+            
+            // Configurar botón "🔍" para búsqueda de histórico
+            if (searchButton) {
+                console.log('✅ Configurando botón "🔍"...');
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🎯 CLICK EN BOTÓN 🔍 DETECTADO');
+                    showSearchModal();
+                });
+            } else {
+                console.error('❌ Botón de búsqueda no encontrado');
+            }
+            
+            // Configurar botón "Gestionar"
+            if (manageButton) {
+                console.log('✅ Configurando botón "Gestionar"...');
+                manageButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();                console.log('🎯 CLICK EN BOTÓN GESTIONAR DETECTADO');
+                
+                // Usar función de app.js
+                if (typeof showManageSpecialtiesModal === 'function') {
+                    showManageSpecialtiesModal();
+                } else {
+                    console.error('❌ showManageSpecialtiesModal no disponible');
+                }
+                });
+            } else {
+                console.error('❌ Botón gestionar no encontrado');
+                // Buscar por texto como fallback
+                setTimeout(() => {
+                    const allButtons = document.querySelectorAll('button');
+                    allButtons.forEach(btn => {
+                        if (btn.textContent.includes('Gestionar')) {
+                            console.log('✅ Botón gestionar encontrado por texto');
+                            btn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('🎯 CLICK EN BOTÓN GESTIONAR (FALLBACK) DETECTADO');
+                                if (typeof showManageSpecialtiesModal === 'function') {
+                                    showManageSpecialtiesModal();
+                                }
+                            });
+                        }
+                    });
+                }, 500);
+            }
+            
+            // Event listener unificado para cerrar modales
+            document.addEventListener('click', function(e) {
+                // Cerrar modal con botones de cerrar
+                if (e.target.classList.contains('modal-close') || 
+                    e.target.id === 'closeFormModal' || 
+                    e.target.id === 'closeSpecialtiesModal' ||
+                    e.target.id === 'closeSearchModal' ||
+                    e.target.id === 'cancelFormBtn' ||
+                    e.target.id === 'cancelSearchBtn') {
+                    
+                    console.log('🔄 Botón de cerrar pulsado');
+                    const modal = e.target.closest('.modal-overlay');
+                    if (modal) {
+                        if (modal.id === 'addAppointmentModal' && typeof hideFormModal === 'function') {
+                            hideFormModal();
+                        } else if (modal.id === 'manageSpecialtiesModal' && typeof hideManageSpecialtiesModal === 'function') {
+                            hideManageSpecialtiesModal();
+                        } else if (modal.id === 'searchHistoryModal') {
+                            hideSearchModal();
+                        }
+                    }
+                    return;
+                }
+                
+                // Cerrar modal haciendo click en el overlay
+                if (e.target.classList.contains('modal-overlay')) {
+                    console.log('🔄 Click en overlay - cerrando modal');
+                    if (e.target.id === 'addAppointmentModal' && typeof hideFormModal === 'function') {
+                        hideFormModal();
+                    } else if (e.target.id === 'manageSpecialtiesModal' && typeof hideManageSpecialtiesModal === 'function') {
+                        hideManageSpecialtiesModal();
+                    } else if (e.target.id === 'searchHistoryModal') {
+                        hideSearchModal();
+                    }
+                    return;
+                }
+            });
+            
+            // Cerrar modales con Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    console.log('🔄 Escape presionado - cerrando modales');
+                    
+                    // Buscar modales visibles y cerrarlos
+                    const addModal = document.getElementById('addAppointmentModal');
+                    const manageModal = document.getElementById('manageSpecialtiesModal');
+                    const searchModal = document.getElementById('searchHistoryModal');
+                    
+                    if (addModal && !addModal.classList.contains('hidden')) {
+                        if (typeof hideFormModal === 'function') hideFormModal();
+                    }
+                    
+                    if (manageModal && !manageModal.classList.contains('hidden')) {
+                        if (typeof hideManageSpecialtiesModal === 'function') hideManageSpecialtiesModal();
+                    }
+                    
+                    if (searchModal && !searchModal.classList.contains('hidden')) {
+                        hideSearchModal();
+                    }
+                }
+            });
+            
+            // Funciones globales para debugging
+            window.testAddModal = () => {
+                if (typeof showFormModal === 'function') {
+                    showFormModal();
+                } else {
+                    console.error('❌ showFormModal no disponible');
+                }
+            };
+            
+            window.testManageModal = () => {
+                if (typeof showManageSpecialtiesModal === 'function') {
+                    showManageSpecialtiesModal();
+                } else {
+                    console.error('❌ showManageSpecialtiesModal no disponible');
+                }
+            };
+            
+            window.testSearchModal = () => {
+                showSearchModal();
+            };
+            
+            console.log('✅ SISTEMA DE MODALES CONFIGURADO COMPLETAMENTE');
+            console.log('🧪 Usa window.testAddModal(), window.testManageModal() o window.testSearchModal() para probar');
+        }
+        
+        function renderSpecialtyCards(especialidades) {
+            console.log('🔍 DEBUG: Renderizando speciality cards...');
+            const container = document.getElementById('specialtyCards');
+            if (!container || !especialidades) return;
+            
+            container.innerHTML = '';
+            
+            // Crear una copia de las especialidades con datos enriquecidos para ordenamiento
+            const especialidadesEnriquecidas = especialidades.map(specialty => {
+                const especialidadInfo = window.appData.especialidadData[specialty.codigo];
+                
+                // CORREGIDO: El número actual debe ser específico de cada especialidad
+                let currentNumber = 0;
+                if (especialidadInfo && especialidadInfo.ultimo_numero) {
+                    // Usar el último número específico de esta especialidad
+                    currentNumber = especialidadInfo.ultimo_numero;
+                } else {
+                    // Fallback: buscar en el campo currentNumber del objeto specialty
+                    currentNumber = specialty.currentNumber || 0;
+                }
+                
+                // Calcular el máximo (pico más alto) de la especialidad
+                let maxNumber = currentNumber;
+                if (especialidadInfo && especialidadInfo.historico && especialidadInfo.historico.length > 0) {
+                    maxNumber = Math.max(...especialidadInfo.historico.map(h => h.numero));
+                } else {
+                    // Si no hay histórico, el máximo es igual al actual
+                    maxNumber = currentNumber;
+                }
+                
+                console.log(`🔍 DEBUG: ${specialty.codigo} - Actual: ${currentNumber}, Máximo: ${maxNumber}, Restantes: ${specialty.remaining || 0}`);
+                
+                return {
+                    ...specialty,
+                    enrichedCurrentNumber: currentNumber,
+                    enrichedMaxNumber: maxNumber
+                };
+            });
+            
+            // ORDENAR por número de orden más alto (descendente)
+            especialidadesEnriquecidas.sort((a, b) => {
+                const numberA = Math.max(a.enrichedCurrentNumber, a.enrichedMaxNumber);
+                const numberB = Math.max(b.enrichedCurrentNumber, b.enrichedMaxNumber);
+                return numberB - numberA; // Descendente (mayor a menor)
+            });
+            
+            console.log('🔍 DEBUG: Especialidades ordenadas por número más alto:', 
+                especialidadesEnriquecidas.map(s => `${s.codigo}: ${Math.max(s.enrichedCurrentNumber, s.enrichedMaxNumber)}`));
+            
+            especialidadesEnriquecidas.forEach(specialty => {
+                // Normalizar el estado para compatibilidad
+                const status = getSpecialtyStatus(specialty);
+                const statusText = getSpecialtyStatusText(specialty);
+                
+                const currentNumber = specialty.enrichedCurrentNumber;
+                const maxNumber = specialty.enrichedMaxNumber;
+                const remaining = specialty.remaining || 0;
+                
+                const card = document.createElement('div');
+                card.className = 'flashcard';
+                card.innerHTML = `
+                    <div class="flashcard-header">
+                        <span class="specialty-code">${specialty.codigo}</span>
+                        <span class="status status--${status}">${statusText}</span>
+                    </div>
+                    <div class="flashcard-content">
+                        <h3 class="flashcard-title">${specialty.nombre}</h3>
+                    </div>
+                    <div class="flashcard-stats">
+                        <div class="stat-item current-number left-stats">
+                            <span class="stat-label">Actual</span>
+                            <span class="stat-value">${currentNumber.toLocaleString()}</span>
+                        </div>
+                        <div class="stat-item maximum right-stats">
+                            <span class="stat-label">Máximo</span>
+                            <span class="stat-value">${maxNumber.toLocaleString()}</span>
+                        </div>
+                        <div class="stat-item remaining center-stats">
+                            <span class="stat-label">Restantes</span>
+                            <span class="stat-value">${remaining.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        // Funciones de normalización para manejar inconsistencias de datos
+        function getSpecialtyStatus(specialty) {
+            // Determinar si está pendiente en base a múltiples campos
+            const isPending = specialty.pendiente === true || 
+                             specialty.status === 'pendent p.c.' ||
+                             specialty.status === 'pendiente';
+            return isPending ? 'warning' : 'success';
+        }
+        
+        function getSpecialtyStatusText(specialty) {
+            // Determinar texto del estado
+            const isPending = specialty.pendiente === true || 
+                             specialty.status === 'pendent p.c.' ||
+                             specialty.status === 'pendiente';
+            return isPending ? 'pendent p.c.' : 'activa';
+        }
+        
+        function isSpecialtyPending(specialty) {
+            // Función helper para determinar si una especialidad está pendiente
+            return specialty.pendiente === true || 
+                   specialty.status === 'pendent p.c.' ||
+                   specialty.status === 'pendiente';
+        }
+        
+        function renderAppointmentsTable(appointments) {
+            console.log('🔍 DEBUG: Renderizando appointments table...');
+            const tbody = document.querySelector('#appointmentsTable tbody');
+            if (!tbody || !appointments) return;
+            
+            // Guardar datos globalmente para ordenación
+            window.appointmentsData = [...appointments];
+            window.currentSortColumn = null;
+            window.currentSortDirection = 'asc';
+            
+            tbody.innerHTML = '';
+            
+            appointments.forEach((appointment, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${appointment.fecha}</td>
+                    <td>${appointment.especialidad}</td>
+                    <td>${appointment.numero?.toLocaleString()}</td>
+                    <td>${appointment.centro}</td>
+                    <td>${appointment.duracion}</td>
+                    <td>${appointment.jornada}</td>
+                    <td>
+                        <button class="btn btn--small btn--primary edit-appointment-btn" 
+                                data-appointment-index="${index}"
+                                title="Editar nombramiento">
+                            ✏️ Editar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Configurar ordenación en headers
+            setupTableSorting();
+        }
+        
+        function populateChartSelect(especialidades) {
+            console.log('🔍 DEBUG: Poblando chart select...');
+            const select = document.getElementById('chartSpecialtySelect');
+            if (!select || !especialidades) return;
+            
+            // Limpiar opciones existentes excepto la primera
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            especialidades.forEach(specialty => {
+                const option = document.createElement('option');
+                option.value = specialty.codigo;
+                option.textContent = `${specialty.codigo} - ${specialty.nombre}`;
+                select.appendChild(option);
+            });
+            
+            // Añadir listener para cambios
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    console.log('🔍 DEBUG: Especialidad seleccionada:', this.value);
+                    renderChart(this.value, window.appData.especialidadData);
+                } else {
+                    hideChart();
+                }
+            });
+        }
+        
+        function populateModalSelect(especialidades) {
+            console.log('🔍 DEBUG: Poblando select del modal...');
+            const select = document.getElementById('especialidad');
+            if (!select || !especialidades) {
+                console.warn('⚠️ Select del modal o especialidades no encontradas');
+                return;
+            }
+            
+            // Limpiar opciones existentes excepto la primera
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            especialidades.forEach(specialty => {
+                const option = document.createElement('option');
+                option.value = specialty.codigo;
+                option.textContent = `${specialty.codigo} - ${specialty.nombre}`;
+                select.appendChild(option);
+            });
+            
+            console.log(`✅ Select del modal poblado con ${especialidades.length} especialidades`);
+        }
+        
+        function populateSpecialtiesList(especialidades) {
+            console.log('🔍 DEBUG: Poblando lista de especialidades para gestionar...');
+            const container = document.getElementById('specialtiesList');
+            if (!container || !especialidades) {
+                console.warn('⚠️ Container de especialidades o datos no encontrados');
+                return;
+            }
+            
+            // Limpiar contenido existente
+            container.innerHTML = '';
+            
+            // Guardar referencia a las especialidades para acceso global
+            window.currentEspecialidades = especialidades;
+            
+            especialidades.forEach((specialty, index) => {
+                // Usar funciones de normalización
+                const isPending = isSpecialtyPending(specialty);
+                const statusText = getSpecialtyStatusText(specialty);
+                
+                const specialtyItem = document.createElement('div');
+                specialtyItem.className = 'specialty-item';
+                specialtyItem.innerHTML = `
+                    <div class="specialty-info">
+                        <span class="specialty-code">${specialty.codigo}</span>
+                        <span class="specialty-name">${specialty.nombre}</span>
+                        <span class="specialty-status ${isPending ? 'pending' : 'active'}">
+                            ${statusText}
+                        </span>
+                    </div>
+                    <div class="specialty-actions">
+                        <button type="button" class="btn btn--outline btn--small edit-specialty-btn" 
+                                data-specialty-index="${index}"
+                                data-specialty-code="${specialty.codigo}"
+                                data-specialty-name="${specialty.nombre}"
+                                data-specialty-status="${specialty.status || ''}"
+                                data-specialty-pending="${isPending}">
+                            ✏️ Editar
+                        </button>
+                        <button type="button" class="btn btn--danger btn--small delete-specialty-btn" 
+                                data-specialty-index="${index}">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                `;
+                container.appendChild(specialtyItem);
+            });
+            
+            // Añadir event listeners para los botones de editar
+            container.querySelectorAll('.edit-specialty-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('🔍 DEBUG: ===== BOTÓN EDITAR CLICKEADO =====');
+                    
+                    const index = parseInt(this.dataset.specialtyIndex);
+                    const code = this.dataset.specialtyCode;
+                    const name = this.dataset.specialtyName;
+                    const status = this.dataset.specialtyStatus;
+                    const isPendingString = this.dataset.specialtyPending;
+                    
+                    console.log('🔍 DEBUG: Datos del botón:', {
+                        índice: index,
+                        código: code,
+                        nombre: name,
+                        estado: status,
+                        pendiente: isPendingString
+                    });
+                    console.log('🔍 DEBUG: Especialidades en memoria:', window.currentEspecialidades?.length);
+                    
+                    // Validar datos del dataset
+                    if (isNaN(index) || index < 0) {
+                        console.error('❌ Índice inválido:', index);
+                        alert('Error: Índice de especialidad inválido');
+                        return;
+                    }
+                    
+                    if (!code || !name) {
+                        console.error('❌ Datos incompletos del dataset:', {code, name});
+                        alert('Error: Datos de especialidad incompletos');
+                        return;
+                    }
+                    
+                    // Intentar obtener desde el array principal
+                    if (window.currentEspecialidades && index < window.currentEspecialidades.length) {
+                        const specialtyToEdit = window.currentEspecialidades[index];
+                        console.log('🔍 DEBUG: Especialidad desde array:', specialtyToEdit);
+                        
+                        if (specialtyToEdit && specialtyToEdit.codigo && specialtyToEdit.nombre) {
+                            console.log('✅ Usando datos del array principal');
+                            editSpecialtyForm(specialtyToEdit, index);
+                            return;
+                        } else {
+                            console.warn('⚠️ Especialidad del array incompleta:', specialtyToEdit);
+                        }
+                    } else {
+                        console.warn('⚠️ Array no disponible o índice fuera de rango');
+                    }
+                    
+                    // Fallback: crear objeto desde datasets
+                    console.log('🔄 Usando fallback con datos del dataset...');
+                    const fallbackSpecialty = {
+                        codigo: code,
+                        nombre: name,
+                        status: status || 'pendent p.c.',
+                        pendiente: isPendingString === 'true'
+                    };
+                    
+                    console.log('🔄 Objeto fallback creado:', fallbackSpecialty);
+                    editSpecialtyForm(fallbackSpecialty, index);
+                });
+            });
+            
+            // Añadir event listeners para los botones de eliminar
+            container.querySelectorAll('.delete-specialty-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const index = parseInt(this.dataset.specialtyIndex);
+                    
+                    if (window.currentEspecialidades && index >= 0 && index < window.currentEspecialidades.length) {
+                        deleteSpecialty(window.currentEspecialidades[index], index);
+                    } else {
+                        console.error('❌ No se puede eliminar: datos no disponibles');
+                    }
+                });
+            });
+            
+            console.log(`✅ Lista de especialidades poblada con ${especialidades.length} elementos`);
+        }
+        
+        function editSpecialtyForm(specialty, index) {
+            console.log('🔍 DEBUG: ===== FUNCIÓN EDITSPECIALTY LLAMADA =====');
+            console.log('🔍 DEBUG: Parámetros recibidos:', {
+                specialty: specialty,
+                index: index,
+                typeOfSpecialty: typeof specialty,
+                isNull: specialty === null,
+                isUndefined: specialty === undefined
+            });
+            
+            // Validar que tenemos los datos necesarios
+            if (!specialty || typeof specialty !== 'object') {
+                console.error('❌ Objeto specialty inválido:', specialty);
+                console.error('❌ Tipo de specialty:', typeof specialty);
+                alert('Error: No se pudieron cargar los datos de la especialidad');
+                return;
+            }
+            
+            console.log('🔍 DEBUG: Datos del objeto specialty:', {
+                codigo: specialty.codigo,
+                nombre: specialty.nombre,
+                status: specialty.status,
+                pendiente: specialty.pendiente
+            });
+            
+            // Poblar el formulario con los datos actuales
+            const codeInput = document.getElementById('newSpecialtyCode');
+            const nameInput = document.getElementById('newSpecialtyName');
+            const pendingCheckbox = document.getElementById('newSpecialtyPending');
+            const form = document.getElementById('addSpecialtyForm');
+            const submitBtn = form?.querySelector('button[type="submit"]');
+            
+            console.log('🔍 DEBUG: Elementos del formulario encontrados:', {
+                codeInput: !!codeInput,
+                nameInput: !!nameInput,
+                pendingCheckbox: !!pendingCheckbox,
+                form: !!form,
+                submitBtn: !!submitBtn
+            });
+            
+            // Verificar que los elementos existen antes de usarlos
+            if (!codeInput || !nameInput || !pendingCheckbox || !form || !submitBtn) {
+                console.error('❌ No se encontraron todos los elementos del formulario');
+                console.error('❌ Elementos faltantes:', {
+                    codeInput: !codeInput,
+                    nameInput: !nameInput,
+                    pendingCheckbox: !pendingCheckbox,
+                    form: !form,
+                    submitBtn: !submitBtn
+                });
+                alert('Error: No se pudo acceder al formulario de edición');
+                return;
+            }
+            
+            // Limpiar placeholders y establecer valores reales
+            codeInput.placeholder = '';
+            nameInput.placeholder = '';
+            
+            // Poblar código con validación robusta
+            const codigo = specialty.codigo || '';
+            codeInput.value = codigo;
+            console.log(`✅ Código establecido: "${codigo}"`);
+            
+            // Poblar nombre con validación robusta  
+            const nombre = specialty.nombre || '';
+            nameInput.value = nombre;
+            console.log(`✅ Nombre establecido: "${nombre}"`);
+            
+            // Determinar estado pendiente usando función de normalización
+            const isPending = isSpecialtyPending(specialty);
+            pendingCheckbox.checked = isPending;
+            console.log(`✅ Estado pendiente establecido: ${isPending}`);
+            console.log('🔍 DEBUG: Detalles del estado:', {
+                'specialty.status': specialty.status,
+                'specialty.pendiente': specialty.pendiente,
+                'isPending calculado': isPending
+            });
+            
+            // Cambiar el texto del botón y añadir el índice para identificar que es una edición
+            submitBtn.textContent = 'Actualizar Especialidad';
+            submitBtn.dataset.editingIndex = index;
+            
+            // Forzar actualización visual
+            codeInput.dispatchEvent(new Event('input'));
+            nameInput.dispatchEvent(new Event('input'));
+            pendingCheckbox.dispatchEvent(new Event('change'));
+            
+            // Scroll al formulario
+            const addSection = document.querySelector('.add-specialty-section');
+            if (addSection) {
+                addSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            console.log(`✅ Formulario preparado exitosamente para editar: ${codigo} - ${nombre}`);
+        }
+        
+        // Sobrescribir la función editSpecialty de app.js para evitar conflictos
+        window.editSpecialty = function(index) {
+            console.log('🔄 Función editSpecialty de app.js interceptada, redirigiendo a editSpecialtyForm...');
+            console.log('🔍 DEBUG: Índice recibido desde app.js:', index);
+            
+            let specialtyToEdit = null;
+            
+            // Buscar la especialidad en múltiples fuentes
+            // 1. Primero en window.currentEspecialidades si existe
+            if (window.currentEspecialidades && index >= 0 && index < window.currentEspecialidades.length) {
+                specialtyToEdit = window.currentEspecialidades[index];
+                console.log('🔍 DEBUG: Especialidad encontrada en currentEspecialidades:', specialtyToEdit);
+            }
+            // 2. Si no existe, buscar en window.appData
+            else if (window.appData?.userInfo?.especialidades && index >= 0 && index < window.appData.userInfo.especialidades.length) {
+                specialtyToEdit = window.appData.userInfo.especialidades[index];
+                console.log('🔍 DEBUG: Especialidad encontrada en appData:', specialtyToEdit);
+                
+                // Actualizar window.currentEspecialidades para futuros usos
+                window.currentEspecialidades = window.appData.userInfo.especialidades;
+                console.log('✅ window.currentEspecialidades actualizado desde appData');
+            }
+            
+            if (specialtyToEdit && specialtyToEdit.codigo && specialtyToEdit.nombre) {
+                console.log('✅ Especialidad válida encontrada, llamando a editSpecialtyForm');
+                editSpecialtyForm(specialtyToEdit, index);
+            } else {
+                console.error('❌ No se pudo encontrar la especialidad en el índice:', index);
+                console.error('❌ Datos disponibles:', {
+                    currentEspecialidadesLength: window.currentEspecialidades?.length,
+                    appDataEspecialidadesLength: window.appData?.userInfo?.especialidades?.length,
+                    requestedIndex: index,
+                    foundSpecialty: specialtyToEdit
+                });
+                alert('Error: No se pudo acceder a los datos de la especialidad');
+            }
+        };
+        
+        function deleteSpecialty(specialty, index) {
+            console.log('🔍 DEBUG: Solicitando eliminar especialidad:', specialty);
+            
+            if (confirm(`¿Estás seguro de que quieres eliminar la especialidad "${specialty.codigo} - ${specialty.nombre}"?`)) {
+                // Aquí iría la lógica para eliminar la especialidad del backend
+                console.log(`🗑️ Eliminando especialidad ${specialty.codigo} (índice ${index})`);
+                
+                // Por ahora solo mostramos un mensaje
+                alert(`Especialidad "${specialty.codigo} - ${specialty.nombre}" eliminada.`);
+                
+                // Recargar la lista (en una implementación real, actualizaríamos los datos)
+                if (window.appData && window.appData.userInfo && window.appData.userInfo.especialidades) {
+                    populateSpecialtiesList(window.appData.userInfo.especialidades);
+                }
+            }
+        }
+        
+        function resetSpecialtyForm() {
+            console.log('🔍 DEBUG: Reseteando formulario de especialidad...');
+            
+            const form = document.getElementById('addSpecialtyForm');
+            const submitBtn = form?.querySelector('button[type="submit"]');
+            const codeInput = document.getElementById('newSpecialtyCode');
+            const nameInput = document.getElementById('newSpecialtyName');
+            
+            // Resetear el formulario
+            if (form) form.reset();
+            
+            // Restaurar placeholders originales
+            if (codeInput) {
+                codeInput.placeholder = 'Ej: 720';
+                codeInput.value = '';
+            }
+            if (nameInput) {
+                nameInput.placeholder = 'Ej: Nueva Especialidad';
+                nameInput.value = '';
+            }
+            
+            // Restaurar botón a estado normal
+            if (submitBtn) {
+                submitBtn.textContent = 'Añadir Especialidad';
+                delete submitBtn.dataset.editingIndex;
+            }
+            
+            console.log('✅ Formulario de especialidad reseteado con placeholders restaurados');
+        }
+        
+        // CÓDIGO DE forceShowModal COMENTADO - CAUSABA CONFLICTOS
+        /*
+        function forceShowModal(modalId, buttonName) {
+            // ... código anterior comentado por conflictos ...
+        }
+        */
+        
+        // CÓDIGO DE setupModalEvents ANTERIOR - COMENTADO PARA EVITAR CONFLICTOS
+        /*
+        function setupModalEvents() {
+            // ... código anterior comentado ...
+        }
+        */
+        
+        function setupOrderNumberEdit() {
+            console.log('🔍 DEBUG: Configurando edición de número de orden...');
+            
+            const editBtn = document.getElementById('editOrderBtn');
+            const displayNumber = document.getElementById('displayOrderNumber');
+            const editForm = document.getElementById('editOrderForm');
+            const newOrderInput = document.getElementById('newOrderNumber');
+            const saveBtn = document.getElementById('saveOrderBtn');
+            const cancelBtn = document.getElementById('cancelOrderBtn');
+            
+            if (!editBtn || !displayNumber || !editForm) {
+                console.warn('⚠️ No se encontraron elementos para edición de número de orden');
+                return;
+            }
+            
+            editBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('🔍 DEBUG: Activando edición de número de orden');
+                
+                // Mostrar formulario de edición
+                editForm.classList.remove('hidden');
+                editForm.style.display = 'flex';
+                
+                // Poner el valor actual en el input
+                if (newOrderInput) {
+                    newOrderInput.value = '101322';
+                    newOrderInput.focus();
+                }
+            });
+            
+            if (saveBtn && newOrderInput) {
+                saveBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const newNumber = parseInt(newOrderInput.value);
+                    
+                    if (isNaN(newNumber) || newNumber <= 0) {
+                        alert('Por favor, introduce un número válido');
+                        return;
+                    }
+                    
+                    console.log('🔍 DEBUG: Guardando nuevo número de orden:', newNumber);
+                    
+                    // Actualizar el display
+                    displayNumber.textContent = newNumber.toLocaleString();
+                    
+                    // Ocultar formulario
+                    editForm.classList.add('hidden');
+                    editForm.style.display = 'none';
+                    
+                    // Actualizar datos en memoria
+                    if (window.appData && window.appData.userInfo) {
+                        window.appData.userInfo.numero_orden = newNumber;
+                    }
+                    
+                    alert('Número de orden actualizado correctamente');
+                });
+            }
+            
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('🔍 DEBUG: Cancelando edición de número de orden');
+                    
+                    // Ocultar formulario sin guardar
+                    editForm.classList.add('hidden');
+                    editForm.style.display = 'none';
+                    
+                    // Limpiar input
+                    if (newOrderInput) {
+                        newOrderInput.value = '';
+                    }
+                });
+            }
+            
+            console.log('🔍 DEBUG: Edición de número de orden configurada');
+        }
+        
+        function setupSpecialtyForm() {
+            console.log('🔍 DEBUG: Configurando formulario de especialidades...');
+            
+            const form = document.getElementById('addSpecialtyForm');
+            if (!form) {
+                console.warn('⚠️ No se encontró el formulario de especialidades');
+                return;
+            }
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('🔍 DEBUG: Enviando formulario de especialidad...');
+                
+                const codeInput = document.getElementById('newSpecialtyCode');
+                const nameInput = document.getElementById('newSpecialtyName');
+                const pendingCheckbox = document.getElementById('newSpecialtyPending');
+                const submitBtn = this.querySelector('button[type="submit"]');
+                
+                const code = codeInput?.value?.trim();
+                const name = nameInput?.value?.trim();
+                const pending = pendingCheckbox?.checked || false;
+                
+                if (!code || !name) {
+                    alert('Por favor, completa todos los campos obligatorios.');
+                    return;
+                }
+                
+                const isEditing = submitBtn?.dataset.editingIndex !== undefined;
+                const editIndex = parseInt(submitBtn?.dataset.editingIndex || -1);
+                
+                if (isEditing) {
+                    // Actualizar especialidad existente manteniendo campos originales
+                    console.log(`🔍 DEBUG: Actualizando especialidad en índice ${editIndex}`);
+                    
+                    // Buscar la especialidad tanto en el array principal como en el de trabajo
+                    let especialidadActualizada = false;
+                    
+                    // Actualizar en window.appData.userInfo.especialidades
+                    if (window.appData?.userInfo?.especialidades?.[editIndex]) {
+                        const currentSpecialty = window.appData.userInfo.especialidades[editIndex];
+                        window.appData.userInfo.especialidades[editIndex] = {
+                            ...currentSpecialty, // Mantener campos existentes
+                            codigo: code,
+                            nombre: name,
+                            // Actualizar ambos campos para compatibilidad
+                            pendiente: pending,
+                            status: pending ? 'pendent p.c.' : 'activa'
+                        };
+                        especialidadActualizada = true;
+                        console.log('✅ Especialidad actualizada en appData.userInfo.especialidades');
+                    }
+                    
+                    // Actualizar en window.currentEspecialidades si existe
+                    if (window.currentEspecialidades?.[editIndex]) {
+                        const currentSpecialty = window.currentEspecialidades[editIndex];
+                        window.currentEspecialidades[editIndex] = {
+                            ...currentSpecialty,
+                            codigo: code,
+                            nombre: name,
+                            pendiente: pending,
+                            status: pending ? 'pendent p.c.' : 'activa'
+                        };
+                        console.log('✅ Especialidad actualizada en currentEspecialidades');
+                    }
+                    
+                    if (especialidadActualizada) {
+                        alert(`Especialidad "${code} - ${name}" actualizada correctamente.`);
+                    } else {
+                        console.error('❌ No se pudo actualizar la especialidad');
+                        alert('Error al actualizar la especialidad.');
+                        return;
+                    }
+                } else {
+                    // Añadir nueva especialidad con formato completo
+                    console.log('🔍 DEBUG: Añadiendo nueva especialidad');
+                    const newSpecialty = {
+                        codigo: code,
+                        nombre: name,
+                        pendiente: pending,
+                        status: pending ? 'pendent p.c.' : 'activa',
+                        currentNumber: 0,
+                        remaining: 101322
+                    };
+                    
+                    if (window.appData?.userInfo?.especialidades) {
+                        window.appData.userInfo.especialidades.push(newSpecialty);
+                    }
+                    alert(`Especialidad "${code} - ${name}" añadida correctamente.`);
+                }
+                
+                // Resetear formulario
+                resetSpecialtyForm();
+                
+                // Actualizar todas las listas y vistas
+                if (window.appData?.userInfo?.especialidades) {
+                    console.log('🔄 Actualizando todas las listas después del cambio...');
+                    
+                   
+                    
+                    // Actualizar lista de especialidades en el modal
+                    populateSpecialtiesList(window.appData.userInfo.especialidades);
+                    
+                    // Actualizar select del modal de nombramiento
+                    populateModalSelect(window.appData.userInfo.especialidades);
+                    
+                    // Actualizar select de gráficos
+                    populateChartSelect(window.appData.userInfo.especialidades);
+                    
+                    // Actualizar tarjetas del dashboard
+                    renderSpecialtyCards(window.appData.userInfo.especialidades);
+                    
+                    console.log('✅ Todas las listas actualizadas correctamente');
+                } else {
+                    console.error('❌ No se pudieron actualizar las listas: datos no disponibles');
+                }
+            });
+            
+            console.log('✅ Formulario de especialidades configurado');
+        }
+        
+        function setupTableSorting() {
+            console.log('🔍 DEBUG: Configurando ordenación de tabla...');
+            
+            const headers = document.querySelectorAll('#appointmentsTable th.sortable');
+            
+            headers.forEach(header => {
+                header.addEventListener('click', function() {
+                    const sortColumn = this.dataset.sort;
+                    console.log('🔍 DEBUG: Ordenando por columna:', sortColumn);
+                    
+                    // Determinar dirección de ordenación
+                    if (window.currentSortColumn === sortColumn) {
+                        // Cambiar dirección si es la misma columna
+                        window.currentSortDirection = window.currentSortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        // Nueva columna, empezar con descendente (mayor a menor)
+                        window.currentSortDirection = 'desc';
+                    }
+                    
+                    window.currentSortColumn = sortColumn;
+                    
+                    // Actualizar iconos visuales
+                    updateSortIcons(this, window.currentSortDirection);
+                    
+                    // Ordenar datos
+                    const sortedData = sortAppointments(window.appointmentsData, sortColumn, window.currentSortDirection);
+                    
+                    // Renderizar tabla ordenada
+                    renderSortedTable(sortedData);
+                });
+            });
+        }
+        
+        function updateSortIcons(activeHeader, direction) {
+            // Limpiar todos los iconos
+            document.querySelectorAll('#appointmentsTable th.sortable .sort-icon').forEach(icon => {
+                icon.textContent = '↕';
+                icon.parentElement.classList.remove('sorted-asc', 'sorted-desc');
+            });
+            
+            // Actualizar icono activo
+            const icon = activeHeader.querySelector('.sort-icon');
+            if (icon) {
+                icon.textContent = direction === 'asc' ? '↑' : '↓';
+                activeHeader.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+            }
+        }
+        
+        function sortAppointments(appointments, column, direction) {
+            return [...appointments].sort((a, b) => {
+                let valueA, valueB;
+                
+                switch (column) {
+                    case 'fecha':
+                        // Convertir fecha DD/MM/YYYY a objeto Date para comparar
+                        valueA = new Date(a.fecha.split('/').reverse().join('-'));
+                        valueB = new Date(b.fecha.split('/').reverse().join('-'));
+                        break;
+                    case 'numero':
+                        valueA = a.numero || 0;
+                        valueB = b.numero || 0;
+                        break;
+                    case 'especialidad':
+                    case 'centro':
+                    case 'duracion':
+                    case 'jornada':
+                        valueA = (a[column] || '').toString().toLowerCase();
+                        valueB = (b[column] || '').toString().toLowerCase();
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                // Comparar valores
+                if (valueA < valueB) {
+                    return direction === 'asc' ? -1 : 1;
+                }
+                if (valueA > valueB) {
+                    return direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        
+        function renderSortedTable(sortedAppointments) {
+            const tbody = document.querySelector('#appointmentsTable tbody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            sortedAppointments.forEach((appointment, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${appointment.fecha}</td>
+                    <td>${appointment.especialidad}</td>
+                    <td>${appointment.numero?.toLocaleString()}</td>
+                    <td>${appointment.centro}</td>
+                    <td>${appointment.duracion}</td>
+                    <td>${appointment.jornada}</td>
+                    <td>
+                        <button class="btn btn--small btn--primary edit-appointment-btn" 
+                                data-appointment-index="${index}"
+                                data-appointment-data='${JSON.stringify(appointment)}'
+                                title="Editar nombramiento">
+                            ✏️ Editar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Reconfigurar event listeners para botones de editar
+            setupEditAppointmentButtons();
+        }
+        
+        function setupEditAppointmentButtons() {
+            const editButtons = document.querySelectorAll('.edit-appointment-btn');
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const appointmentData = JSON.parse(this.dataset.appointmentData);
+                    openEditAppointmentModal(appointmentData);
+                });
+            });
+        }
+        
+        function openEditAppointmentModal(appointmentData) {
+            console.log('🔍 DEBUG: Abriendo modal de edición para:', appointmentData);
+            
+            const modal = document.getElementById('editAppointmentModal');
+            if (!modal) {
+                console.error('❌ Modal de edición no encontrado');
+                return;
+            }
+            
+            // Poblar campos del formulario
+            populateEditAppointmentForm(appointmentData);
+            
+            // Mostrar modal
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.opacity = '1';
+            modal.style.visibility = 'visible';
+            
+            // Configurar event listeners
+            setupEditAppointmentModalEvents(appointmentData);
+            
+            console.log('✅ Modal de edición abierto');
+        }
+        
+        function populateEditAppointmentForm(appointment) {
+            // Convertir fecha de DD/MM/YYYY a YYYY-MM-DD para input[type="date"]
+            const fechaParts = appointment.fecha.split('/');
+            const fechaISO = `${fechaParts[2]}-${fechaParts[1].padStart(2, '0')}-${fechaParts[0].padStart(2, '0')}`;
+            
+            document.getElementById('editFecha').value = fechaISO;
+            document.getElementById('editEspecialidad').value = appointment.especialidad;
+            document.getElementById('editNumero').value = appointment.numero;
+            document.getElementById('editCentro').value = appointment.centro;
+            document.getElementById('editDuracion').value = appointment.duracion;
+            document.getElementById('editJornada').value = appointment.jornada;
+            
+            // Poblar select de especialidades
+            populateEditSpecialtySelect();
+        }
+        
+        function populateEditSpecialtySelect() {
+            const select = document.getElementById('editEspecialidad');
+            if (!select || !window.appData?.userInfo?.especialidades) return;
+            
+            // Limpiar opciones existentes excepto la primera
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            window.appData.userInfo.especialidades.forEach(specialty => {
+                const option = document.createElement('option');
+                option.value = specialty.codigo;
+                option.textContent = `${specialty.codigo} - ${specialty.nombre}`;
+                select.appendChild(option);
+            });
+        }
+        
+        function setupEditAppointmentModalEvents(originalAppointment) {
+            const modal = document.getElementById('editAppointmentModal');
+            const form = document.getElementById('editAppointmentForm');
+            const closeBtn = document.getElementById('closeEditAppointmentModal');
+            const cancelBtn = document.getElementById('cancelEditAppointmentBtn');
+            const deleteBtn = document.getElementById('deleteAppointmentBtn');
+            
+            // Limpiar event listeners previos
+            const newForm = form.cloneNode(true);
+            form.parentNode.replaceChild(newForm, form);
+            
+            // Event listener para submit del formulario
+            newForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateAppointment(originalAppointment);
+            });
+            
+            // Event listeners para cerrar modal
+            [closeBtn, cancelBtn].forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', () => closeEditAppointmentModal());
+                }
+            });
+            
+            // Event listener para eliminar
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', () => {
+                    if (confirm('¿Estás seguro de que quieres eliminar este nombramiento?')) {
+                        deleteAppointment(originalAppointment);
+                    }
+                });
+            }
+            
+            // Cerrar con Escape
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeEditAppointmentModal();
+                    document.removeEventListener('keydown', escapeHandler);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+            
+            // Cerrar haciendo click en overlay
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeEditAppointmentModal();
+                }
+            });
+        }
+        
+        function updateAppointment(originalAppointment) {
+            console.log('🔍 DEBUG: Actualizando nombramiento...');
+            
+            // Obtener datos del formulario
+            const fechaInput = document.getElementById('editFecha').value;
+            const especialidad = document.getElementById('editEspecialidad').value;
+            const numero = parseInt(document.getElementById('editNumero').value);
+            const centro = document.getElementById('editCentro').value;
+            const duracion = document.getElementById('editDuracion').value;
+            const jornada = document.getElementById('editJornada').value;
+            
+            // Validar campos
+            if (!fechaInput || !especialidad || !numero || !centro || !duracion || !jornada) {
+                alert('Por favor, completa todos los campos obligatorios.');
+                return;
+            }
+            
+            // Convertir fecha a formato DD/MM/YYYY
+            const fechaObj = new Date(fechaInput);
+            const fecha = `${fechaObj.getDate().toString().padStart(2, '0')}/${(fechaObj.getMonth() + 1).toString().padStart(2, '0')}/${fechaObj.getFullYear()}`;
+            
+            // Crear objeto actualizado
+            const updatedAppointment = {
+                fecha: fecha,
+                especialidad: especialidad,
+                numero: numero,
+                centro: centro,
+                duracion: duracion,
+                jornada: jornada
+            };
+            
+            console.log('🔍 DEBUG: Nombramiento actualizado:', updatedAppointment);
+            
+            // Actualizar en los datos globales
+            const appointmentIndex = window.appointmentsData.findIndex(app => 
+                app.fecha === originalAppointment.fecha && 
+                app.numero === originalAppointment.numero &&
+                app.especialidad === originalAppointment.especialidad
+            );
+            
+            if (appointmentIndex !== -1) {
+                window.appointmentsData[appointmentIndex] = updatedAppointment;
+                
+                // Actualizar también en appData
+                if (window.appData?.allAppointments) {
+                    const appDataIndex = window.appData.allAppointments.findIndex(app => 
+                        app.fecha === originalAppointment.fecha && 
+                        app.numero === originalAppointment.numero &&
+                        app.especialidad === originalAppointment.especialidad
+                    );
+                    if (appDataIndex !== -1) {
+                        window.appData.allAppointments[appDataIndex] = updatedAppointment;
+                    }
+                }
+                
+                // Renderizar tabla actualizada
+                renderAppointmentsTable(window.appointmentsData);
+                
+                alert('Nombramiento actualizado correctamente.');
+                closeEditAppointmentModal();
+            } else {
+                console.error('❌ No se pudo encontrar el nombramiento para actualizar');
+                alert('Error al actualizar el nombramiento.');
+            }
+        }
+        
+        function deleteAppointment(appointmentToDelete) {
+            console.log('🔍 DEBUG: Eliminando nombramiento:', appointmentToDelete);
+            
+            // Eliminar de los datos globales
+            window.appointmentsData = window.appointmentsData.filter(app => 
+                !(app.fecha === appointmentToDelete.fecha && 
+                  app.numero === appointmentToDelete.numero &&
+                  app.especialidad === appointmentToDelete.especialidad)
+            );
+            
+            // Eliminar también de appData
+            if (window.appData?.allAppointments) {
+                window.appData.allAppointments = window.appData.allAppointments.filter(app => 
+                    !(app.fecha === appointmentToDelete.fecha && 
+                      app.numero === appointmentToDelete.numero &&
+                      app.especialidad === appointmentToDelete.especialidad)
+                );
+            }
+            
+            // Renderizar tabla actualizada
+            renderAppointmentsTable(window.appointmentsData);
+            
+            alert('Nombramiento eliminado correctamente.');
+            closeEditAppointmentModal();
+        }
+        
+        function closeEditAppointmentModal() {
+            const modal = document.getElementById('editAppointmentModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+                modal.style.opacity = '0';
+                modal.style.visibility = 'hidden';
+            }
+            console.log('✅ Modal de edición cerrado');
+        }
+        
+        function renderChart(specialtyCode, especialidadData) {
+            console.log('🔍 DEBUG: Renderizando gráfico para:', specialtyCode);
+            
+            const chartContainer = document.getElementById('chartContainer');
+            const noChartData = document.getElementById('noChartData');
+            
+            if (noChartData) noChartData.classList.add('hidden');
+            if (chartContainer) chartContainer.classList.remove('hidden');
+
+            const dataObj = especialidadData && especialidadData[specialtyCode];
+            if (!dataObj || !dataObj.historico || dataObj.historico.length === 0) {
+                console.log('🔍 DEBUG: No hay datos históricos para', specialtyCode);
+                hideChart();
+                return;
+            }
+
+            const labels = dataObj.historico.map(h => h.fecha);
+            const dataValues = dataObj.historico.map(h => h.numero);
+
+            // Actualizar estadísticas
+            updateChartStats(dataValues, specialtyCode);
+
+            // Crear gráfico con Chart.js
+            const ctx = document.getElementById('appointmentsChart');
+            if (!ctx) return;
+
+            // Destruir gráfico anterior si existe
+            if (window.currentChart) {
+                window.currentChart.destroy();
+            }
+
+            window.currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `${specialtyCode} - Nombramientos`,
+                        data: dataValues,
+                        borderColor: 'rgba(33,128,141,1)',
+                        backgroundColor: 'rgba(33,128,141,0.1)',
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: 'rgba(33,128,141,1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return `Fecha: ${context[0].label}`;
+                                },
+                                label: function(context) {
+                                    return `Nº Orden: ${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        },
+                        legend: { 
+                            display: false 
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        },
+                        y: { 
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Número de Orden'
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            hoverRadius: 10
+                        }
+                    }
+                }
+            });
+        }
+        
+        function hideChart() {
+            const chartContainer = document.getElementById('chartContainer');
+            const noChartData = document.getElementById('noChartData');
+            
+            if (chartContainer) chartContainer.classList.add('hidden');
+            if (noChartData) noChartData.classList.remove('hidden');
+            
+            if (window.currentChart) {
+                window.currentChart.destroy();
+                window.currentChart = null;
+            }
+        }
+        
+        function updateChartStats(dataValues, specialtyCode) {
+            const totalAppointments = dataValues.length;
+            const averageVariation = dataValues.length > 1 ? 
+                Math.round((dataValues[dataValues.length-1] - dataValues[0]) / (dataValues.length-1)) : 0;
+            const maxJump = dataValues.length > 1 ? 
+                Math.max(...dataValues.map((v,i,arr)=> i>0 ? Math.abs(v-arr[i-1]) : 0)) : 0;
+
+            const totalEl = document.getElementById('totalAppointments');
+            const avgEl = document.getElementById('averageVariation');
+            const maxEl = document.getElementById('maxJump');
+            const titleEl = document.getElementById('chartTitle');
+            
+            if (totalEl) totalEl.textContent = totalAppointments.toLocaleString();
+            if (avgEl) avgEl.textContent = averageVariation.toLocaleString();
+            if (maxEl) maxEl.textContent = maxJump.toLocaleString();
+            if (titleEl) titleEl.textContent = `Fluctuaciones de ${specialtyCode}`;
+        }
+        
+        // Función para asegurar que los modales están correctamente ocultos al iniciar
+        function initializeModalsState() {
+            console.log('🔍 DEBUG: Inicializando estado de modales...');
+            
+            const modals = ['addAppointmentModal', 'manageSpecialtiesModal', 'editAppointmentModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    // Asegurar que empiecen ocultos
+                    modal.style.setProperty('display', 'none', 'important');
+                    modal.style.setProperty('visibility', 'hidden', 'important');
+                    modal.classList.add('hidden');
+                    
+                    console.log(`✅ Modal ${modalId} inicializado correctamente`);
+                }
+            });
+        }
+        
+        // Ejecutar inicialización cuando se carga el dashboard
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeModalsState);
+        } else {
+            initializeModalsState();
+        }
+        
+        // ===== FUNCIONES DE BÚSQUEDA DE HISTÓRICO =====
+        
+        function showSearchModal() {
+            console.log('🔍 Mostrando modal de búsqueda de histórico...');
+            
+            const modal = document.getElementById('searchHistoryModal');
+            if (!modal) {
+                console.error('❌ Modal de búsqueda no encontrado');
+                return;
+            }
+            
+            // Resetear el modal a su estado inicial
+            resetSearchModal();
+            
+            // Mostrar modal
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.opacity = '1';
+            modal.style.visibility = 'visible';
+            
+            // Focus en el input de búsqueda
+            const searchInput = document.getElementById('searchOrderNumber');
+            if (searchInput) {
+                setTimeout(() => searchInput.focus(), 100);
+            }
+            
+            console.log('✅ Modal de búsqueda mostrado');
+        }
+        
+        function hideSearchModal() {
+            console.log('🔄 Cerrando modal de búsqueda...');
+            
+            const modal = document.getElementById('searchHistoryModal');
+            if (!modal) return;
+            
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            modal.style.opacity = '0';
+            modal.style.visibility = 'hidden';
+            
+            console.log('✅ Modal de búsqueda cerrado');
+        }
+        
+        function resetSearchModal() {
+            console.log('🔄 Reseteando modal de búsqueda...');
+            
+            // Limpiar el formulario
+            const form = document.getElementById('searchHistoryForm');
+            if (form) form.reset();
+            
+            // Ocultar resultados y mostrar formulario
+            const searchResults = document.getElementById('searchResults');
+            const searchForm = document.querySelector('.search-form');
+            
+            if (searchResults) {
+                searchResults.classList.add('hidden');
+            }
+            
+            if (searchForm) {
+                searchForm.style.display = 'block';
+            }
+            
+            console.log('✅ Modal de búsqueda reseteado');
+        }
+        
+        function setupSearchHistoryForm() {
+            console.log('🔍 Configurando formulario de búsqueda de histórico...');
+            
+            const form = document.getElementById('searchHistoryForm');
+            const newSearchBtn = document.getElementById('newSearchBtn');
+            
+            if (!form) {
+                console.warn('⚠️ Formulario de búsqueda no encontrado');
+                return;
+            }
+            
+            // Event listener para submit del formulario
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const orderInput = document.getElementById('searchOrderNumber');
+                const orderNumber = parseInt(orderInput?.value?.trim());
+                
+                if (!orderNumber || isNaN(orderNumber) || orderNumber <= 0) {
+                    alert('Por favor, introduce un número de orden válido.');
+                    return;
+                }
+                
+                console.log('🔍 Buscando histórico para número de orden:', orderNumber);
+                searchAppointmentHistory(orderNumber);
+            });
+            
+            // Event listener para "Nueva Búsqueda"
+            if (newSearchBtn) {
+                newSearchBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    resetSearchModal();
+                });
+            }
+            
+            console.log('✅ Formulario de búsqueda configurado');
+        }
+        
+        function searchAppointmentHistory(orderNumber) {
+            console.log(`🔍 Ejecutando búsqueda para número de orden: ${orderNumber}`);
+            
+            if (!window.appData?.allAppointments) {
+                console.error('❌ No hay datos de nombramientos disponibles');
+                showSearchError('No hay datos de nombramientos disponibles para buscar.');
+                return;
+            }
+            
+            console.log('🔍 DEBUG: Datos disponibles para búsqueda:', {
+                totalAppointments: window.appData.allAppointments.length,
+                especialidadDataKeys: window.appData.especialidadData ? Object.keys(window.appData.especialidadData) : [],
+                searchingFor: orderNumber
+            });
+            
+            // Buscar en todos los nombramientos y en el histórico de especialidades
+            const results = [];
+            
+            // 1. Buscar en allAppointments (ajustado para el formato correcto)
+            window.appData.allAppointments.forEach(appointment => {
+                console.log('🔍 DEBUG: Revisando nombramiento:', appointment);
+                
+                if (appointment.numero === orderNumber) {
+                    // Convertir formato si es necesario (codigo -> especialidad)
+                    const especialidad = appointment.especialidad || appointment.codigo;
+                    
+                    results.push({
+                        fecha: appointment.fecha,
+                        especialidad: especialidad,
+                        numero: appointment.numero,
+                        centro: appointment.centro,
+                        duracion: appointment.duracion || `${appointment.inicio} - ${appointment.fin}`,
+                        jornada: appointment.jornada,
+                        source: 'appointment'
+                    });
+                    
+                    console.log('✅ DEBUG: Resultado encontrado en allAppointments:', {
+                        numero: appointment.numero,
+                        especialidad: especialidad,
+                        fecha: appointment.fecha
+                    });
+                }
+            });
+            
+            // 2. Buscar en el histórico de especialidades (solo si no se encontró en allAppointments)
+            if (window.appData.especialidadData) {
+                Object.keys(window.appData.especialidadData).forEach(code => {
+                    const specialty = window.appData.especialidadData[code];
+                    if (specialty.historico && Array.isArray(specialty.historico)) {
+                        specialty.historico.forEach(historicalRecord => {
+                            console.log(`🔍 DEBUG: Revisando histórico de ${code}:`, historicalRecord);
+                            
+                            if (historicalRecord.numero === orderNumber) {
+                                // Verificar si ya tenemos este resultado para evitar duplicados
+                                const alreadyExists = results.find(r => 
+                                    r.numero === orderNumber && 
+                                    r.especialidad === code && 
+                                    r.fecha === historicalRecord.fecha
+                                );
+                                
+                                if (!alreadyExists) {
+                                    // Buscar información adicional en allAppointments
+                                    const fullAppointment = window.appData.allAppointments.find(apt => 
+                                        apt.numero === orderNumber && (apt.especialidad === code || apt.codigo === code)
+                                    );
+                                    
+                                    results.push({
+                                        fecha: historicalRecord.fecha,
+                                        especialidad: code,
+                                        numero: historicalRecord.numero,
+                                        centro: fullAppointment?.centro || specialty.centro || 'Centro no especificado',
+                                        duracion: fullAppointment?.duracion || `Hasta ${specialty.fin}` || 'Duración no especificada',
+                                        jornada: fullAppointment?.jornada || specialty.jornada || 'Jornada no especificada',
+                                        source: 'historical'
+                                    });
+                                    
+                                    console.log('✅ DEBUG: Resultado encontrado en histórico:', {
+                                        numero: historicalRecord.numero,
+                                        especialidad: code,
+                                        fecha: historicalRecord.fecha
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Eliminar duplicados basados en fecha + especialidad + número
+            const uniqueResults = results.filter((result, index, arr) => {
+                return arr.findIndex(r => 
+                    r.fecha === result.fecha && 
+                    r.especialidad === result.especialidad && 
+                    r.numero === result.numero
+                ) === index;
+            });
+            
+            // Ordenar por fecha (más reciente primero)
+            uniqueResults.sort((a, b) => {
+                const dateA = parseDateString(a.fecha);
+                const dateB = parseDateString(b.fecha);
+                return dateB - dateA;
+            });
+            
+            console.log(`✅ Búsqueda completada. Encontrados ${uniqueResults.length} resultados:`, uniqueResults);
+            
+            // Mostrar resultados
+            if (uniqueResults.length > 0) {
+                showSearchResults(orderNumber, uniqueResults);
+            } else {
+                showNoSearchResults(orderNumber);
+            }
+        }
+        
+        function parseDateString(dateStr) {
+            // Convertir fecha DD/MM/YYYY a objeto Date
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+            }
+            return new Date(dateStr);
+        }
+        
+        function showSearchResults(orderNumber, results) {
+            console.log(`📋 Mostrando ${results.length} resultados para orden ${orderNumber}`);
+            
+            // Ocultar formulario y mostrar resultados
+            const searchForm = document.querySelector('.search-form');
+            const searchResults = document.getElementById('searchResults');
+            const noResults = document.getElementById('noSearchResults');
+            
+            if (searchForm) searchForm.style.display = 'none';
+            if (searchResults) searchResults.classList.remove('hidden');
+            if (noResults) noResults.classList.add('hidden');
+            
+            // Actualizar título
+            const title = document.getElementById('searchResultsTitle');
+            if (title) {
+                title.textContent = `Histórico para número de orden ${orderNumber.toLocaleString()}`;
+            }
+            
+            // Generar resumen estadístico
+            generateSearchSummary(orderNumber, results);
+            
+            // Renderizar tabla de resultados
+            renderSearchResultsTable(results, orderNumber);
+            
+            console.log('✅ Resultados mostrados correctamente');
+        }
+        
+        function showNoSearchResults(orderNumber) {
+            console.log(`❌ No se encontraron resultados para orden ${orderNumber}`);
+            
+            // Ocultar formulario y tabla, mostrar mensaje de no resultados
+            const searchForm = document.querySelector('.search-form');
+            const searchResults = document.getElementById('searchResults');
+            const noResults = document.getElementById('noSearchResults');
+            
+            if (searchForm) searchForm.style.display = 'none';
+            if (searchResults) searchResults.classList.add('hidden');
+            if (noResults) noResults.classList.remove('hidden');
+            
+            // Actualizar mensaje
+            const noResultsTitle = noResults.querySelector('h4');
+            const noResultsText = noResults.querySelector('p');
+            
+            if (noResultsTitle) {
+                noResultsTitle.textContent = `No se encontraron resultados para ${orderNumber.toLocaleString()}`;
+            }
+            
+            if (noResultsText) {
+                noResultsText.textContent = `No hay nombramientos registrados para el número de orden ${orderNumber.toLocaleString()}.`;
+            }
+            
+            console.log('✅ Mensaje de no resultados mostrado');
+        }
+        
+        function showSearchError(message) {
+            console.error('❌ Error en búsqueda:', message);
+            alert(`Error en la búsqueda: ${message}`);
+        }
+        
+        function generateSearchSummary(orderNumber, results) {
+            console.log('📊 Generando resumen estadístico...');
+            
+            const summaryContainer = document.getElementById('searchSummary');
+            if (!summaryContainer) return;
+            
+            // Calcular estadísticas
+            const totalAppointments = results.length;
+            const specialties = [...new Set(results.map(r => r.especialidad))];
+            const dateRange = getDateRange(results);
+            const mostRecentDate = results.length > 0 ? results[0].fecha : 'N/A';
+            
+            // Generar HTML del resumen
+            summaryContainer.innerHTML = `
+                <h4>📊 Resumen del Histórico</h4>
+                <p>Número de orden buscado: <strong class="search-highlight">${orderNumber.toLocaleString()}</strong></p>
+                <div class="search-summary-stats">
+                    <div class="search-stat">
+                        <span class="search-stat-value">${totalAppointments}</span>
+                        <span class="search-stat-label">Nombramientos</span>
+                    </div>
+                    <div class="search-stat">
+                        <span class="search-stat-value">${specialties.length}</span>
+                        <span class="search-stat-label">Especialidades</span>
+                    </div>
+                    <div class="search-stat">
+                        <span class="search-stat-value">${mostRecentDate}</span>
+                        <span class="search-stat-label">Más Reciente</span>
+                    </div>
+                    <div class="search-stat">
+                        <span class="search-stat-value">${dateRange}</span>
+                        <span class="search-stat-label">Periodo</span>
+                    </div>
+                </div>
+                ${specialties.length > 0 ? `
+                <p><strong>Especialidades encontradas:</strong> ${specialties.join(', ')}</p>
+                ` : ''}
+            `;
+            
+            console.log('✅ Resumen estadístico generado');
+        }
+        
+        function getDateRange(results) {
+            if (results.length === 0) return 'N/A';
+            if (results.length === 1) return 'Un solo nombramiento';
+            
+            const dates = results.map(r => parseDateString(r.fecha)).sort((a, b) => a - b);
+            const firstDate = dates[0];
+            const lastDate = dates[dates.length - 1];
+            
+            const diffTime = Math.abs(lastDate - firstDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return 'Mismo día';
+            if (diffDays < 30) return `${diffDays} días`;
+            if (diffDays < 365) return `${Math.round(diffDays / 30)} meses`;
+            return `${Math.round(diffDays / 365)} años`;
+        }
+        
+        function renderSearchResultsTable(results, searchOrderNumber) {
+            console.log('📋 Renderizando tabla de resultados...');
+            
+            const tbody = document.querySelector('#searchResultsTable tbody');
+            if (!tbody) {
+                console.error('❌ Tabla de resultados no encontrada');
+                return;
+            }
+            
+            // Limpiar tabla
+            tbody.innerHTML = '';
+            
+            // Renderizar filas
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                
+                // Formatear número con highlight si coincide con la búsqueda
+                const numeroDisplay = result.numero === searchOrderNumber 
+                    ? `<span class="search-order-match">${result.numero.toLocaleString()}</span>`
+                    : result.numero.toLocaleString();
+                
+                row.innerHTML = `
+                    <td>${result.fecha}</td>
+                    <td><span class="search-highlight">${result.especialidad}</span></td>
+                    <td>${numeroDisplay}</td>
+                    <td>${result.centro}</td>
+                    <td>${result.duracion}</td>
+                    <td>${result.jornada}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            console.log(`✅ Tabla renderizada con ${results.length} filas`);
+        }
+        
+        // ===== FIN FUNCIONES DE BÚSQUEDA =====
+    </script>
 </body>
 </html>
